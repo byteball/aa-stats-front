@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "description": "Obyte exchange protocol v2",
+  "homepage_url": "https://v2.oswap.io",
+  "source_url": "https://github.com/bonustrack/oswap.io",
+  "field_descriptions": {
+    "define_leverage": "Define a leveraged token, set to 1.",
+    "leverage": "Leverage.",
+    "L": "Leverage.",
+    "final_price": "Final price to swap until.",
+    "delta_xn": "Amount by which net x balance should change.",
+    "delta_yn": "Amount by which net y balance should change.",
+    "min_amount_out": "Minimum amount to receive from swap.",
+    "hops": "Further AAs to send the output coins to.",
+    "asset": "Asset to leverage/deleverage.",
+    "buy": "Set to 1 in order to get leverage.",
+    "sell": "Set to 1 in order to deleverage.",
+    "delta": "Amount by which the asset's net balance should change.",
+    "tokens": "Set to 1 to get leveraged tokens instead of a position.",
+    "position": "Leveraged position to sell or transfer.",
+    "transfer": "Set to 1 to transfer a position to another owner.",
+    "new_owner": "Address of the new owner of a position.",
+    "add_profits": "Set to 1 to add profits to the pool's balances.",
+    "preferred_asset": "Preferred asset to withdraw."
+  }
+}

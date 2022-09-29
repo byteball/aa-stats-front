@@ -1,0 +1,7 @@
+test/fixtures
+**/app/public
+node_modules
+*.css
+*.svg
+*.scss
+config-overrides.js

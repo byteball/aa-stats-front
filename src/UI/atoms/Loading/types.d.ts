@@ -1,0 +1,3 @@
+interface ILoadingProps {
+  fullscreen?: boolean;
+}
