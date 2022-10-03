@@ -11,7 +11,7 @@ export interface IAgentGraphProps {
   isSelectedPeriod: (value: number) => boolean;
   handleActivities: (value: keyof IAddressGraphData) => () => void;
   isSelectedActivities: (value: keyof IAddressGraphData) => boolean;
-  presicion: 'hour' | 'day';
+  precision: 'hour' | 'day';
   yType: yAxisTypes;
   isLoading: boolean;
   actionButtonsConf: IUiControls[];

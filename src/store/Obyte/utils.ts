@@ -3,7 +3,7 @@ import { Client } from 'obyte';
 import { isEmpty } from 'ramda';
 
 import { templates } from 'conf/templates';
-import { apiGetDef } from 'lib/api';
+import { apiGet } from 'lib/api';
 
 /** templated base agents */
 const templatedBaseAAs = templates.reduce(
@@ -24,9 +24,9 @@ export const getDefinitionData = async (
     const res = await client.api.getDefinition(address);
     if ('base_aa' in res[1]) {
       const def = await client.api.getDefinition(res[1].base_aa);
-      return apiGetDef<IDefinition>(def[1].doc_url);
+      return apiGet<IDefinition>(def[1].doc_url);
     }
-    if ('doc_url' in res[1]) return apiGetDef<IDefinition>(res[1].doc_url);
+    if ('doc_url' in res[1]) return apiGet<IDefinition>(res[1].doc_url);
     throw new Error('doc_url or base_aa is absent');
   } catch (e) {
     if (e instanceof Error) throw new Error(e.message);

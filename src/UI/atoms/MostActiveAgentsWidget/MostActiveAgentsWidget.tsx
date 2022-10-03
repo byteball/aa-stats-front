@@ -53,7 +53,7 @@ const MostActiveAgentsWidget: FC = () => {
               key={address}
               component={RouterLink}
               sx={styles.link}
-              to={`aa/${address}`}
+              to={`address/${address}`}
             >
               <Typography sx={styles.index}>{`${i + 1}.`}</Typography>
               <Box sx={styles.titleBox}>

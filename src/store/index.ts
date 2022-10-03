@@ -9,7 +9,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import { aastatsAPI } from './AAstats';
-import { TokenMiddleware } from './Auth/Auth.middleware';
 import { ModalStackReducer } from './ModalStack';
 import { obyteApi, ObyteReducer } from './Obyte';
 import { SnackStackReducer } from './SnackStack';
@@ -40,7 +39,6 @@ const appStore = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(
-      TokenMiddleware,
       aastatsAPI.middleware,
       obyteApi.middleware
     ),

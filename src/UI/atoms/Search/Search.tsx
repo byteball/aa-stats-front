@@ -65,7 +65,7 @@ const Search: FC<ISearchProps> = ({ isPortable = false }) => {
         fireSearchAnalitycsEvent(searchText);
         setAutoFocus('down');
         if (firstAddress) {
-          nav(`aa/${firstAddress}`);
+          nav(`address/${firstAddress}`);
           setSearchText('');
         }
         setOpen(false);

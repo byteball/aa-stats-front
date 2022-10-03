@@ -8,6 +8,7 @@ import { useMedia } from 'lib/useMedia';
 import { useAppSelector } from 'store';
 import { darkModeSelector } from 'store/UI';
 
+import { colors as commonColors } from '../../../conf/colors';
 import LineChartTooltip from '../LineChartTooltip/LineChartTooltip';
 import { ILineChartProps } from './types';
 
@@ -87,7 +88,7 @@ const LineChart: FC<ILineChartProps> = ({
       },
       grid: {
         line: {
-          stroke: darkMode ? '#1a223f' : '#ebebeb',
+          stroke: darkMode ? commonColors.midnightBlue : commonColors.warmweiss,
           strokeWidth: 1,
         },
       },

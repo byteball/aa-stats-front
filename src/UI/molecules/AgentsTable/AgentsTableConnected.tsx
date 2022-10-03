@@ -56,7 +56,7 @@ const AgentsTableConnected: FC = () => {
 
   const handleNavigateFabric = useCallback(
     (address: string) => () => {
-      nav(`/aa/${address}`);
+      nav(`/address/${address}`);
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     },
     [nav]

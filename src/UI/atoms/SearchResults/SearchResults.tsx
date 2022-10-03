@@ -1,7 +1,6 @@
 import { FC, memo } from 'react';
 
 import { Fade, MenuItem, MenuList, Paper, Typography } from '@mui/material';
-import { v4 } from 'uuid';
 
 import SearchedItem from './SearchedItem';
 import { styles } from './styles';
@@ -26,7 +25,7 @@ const SearchResults: FC<ISearchResultsProps> = ({
         )}
         {data.map(({ address, label, tvl }, index, arr) => (
           <SearchedItem
-            key={v4()}
+            key={address}
             address={address}
             arrLength={arr.length}
             autoFocus={autoFocus}

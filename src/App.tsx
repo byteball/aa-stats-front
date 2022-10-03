@@ -16,7 +16,6 @@ import SnackStack from 'UI/atoms/SnackStack/SnackStack';
 import Router from './Router';
 import ModalStack from './UI/atoms/ModalStack/ModalStack';
 import { theme } from './UI/theme';
-import './css/fonts.css';
 
 const App = (): ReactElement => {
   const dispatch = useAppDispatch();

@@ -10,7 +10,7 @@ export interface ITotalGraphProps {
   handleActivities: (value: keyof ITotalWithTvlActivity) => () => void;
   isSelectedActivities: (value: keyof ITotalWithTvlActivity) => boolean;
   isLoading: boolean;
-  presicion: 'hour' | 'day';
+  precision: 'hour' | 'day';
   actionButtonsConf: IUiControls[];
   fullDaysBetweenStartAndEnd: number;
   serieLength: number;

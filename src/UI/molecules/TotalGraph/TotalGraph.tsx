@@ -20,7 +20,7 @@ const TotalGraph: FC<ITotalGraphProps> = ({
   handleActivities,
   isSelectedActivities,
   isLoading,
-  presicion,
+  precision,
   actionButtonsConf,
   fullDaysBetweenStartAndEnd,
   serieLength,
@@ -60,7 +60,7 @@ const TotalGraph: FC<ITotalGraphProps> = ({
               <LineChart
                 data={data}
                 fullDaysBetweenStartAndEnd={fullDaysBetweenStartAndEnd}
-                precision={presicion}
+                precision={precision}
                 serieLength={serieLength}
               />
             ))}

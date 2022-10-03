@@ -78,7 +78,8 @@ const AgentInfoWidget: FC = () => {
       <Box sx={styles.linksWrapper}>
         <Link
           component={isPortable ? IconButton : 'a'}
-          href={`https://explorer.obyte.org/#${address}`}
+          href={`https://explorer.obyte.org/address/${address}`}
+          rel='noopener'
           sx={styles.link}
           target='_blank'
           onClick={explorerAnalyticsClickEvent}
@@ -90,6 +91,7 @@ const AgentInfoWidget: FC = () => {
           <Link
             component={isPortable ? IconButton : 'a'}
             href={homepage_url}
+            rel='noopener'
             sx={styles.link}
             target='_blank'
             onClick={homepageAnalyticsClickEvent}
@@ -102,6 +104,7 @@ const AgentInfoWidget: FC = () => {
           <Link
             component={isPortable ? IconButton : 'a'}
             href={source_url}
+            rel='noopener'
             sx={styles.link}
             target='_blank'
             onClick={githubAnalyticsClickEvent}
