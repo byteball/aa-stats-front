@@ -44,7 +44,7 @@ const AgentGraphConnected: FC = () => {
   );
   const { setUrl } = useStateUrlParams();
   const { from, to } = useTimeframe(selectedPeriod, timeframe);
-  const presicion = useMemo(
+  const precision = useMemo(
     () => (timeframe === 'daily' ? 'day' : 'hour'),
     [timeframe]
   );
@@ -384,7 +384,7 @@ const AgentGraphConnected: FC = () => {
       isSelectedPeriod={isSelectedPeriod}
       mouseX={mouseX}
       mouseY={mouseY}
-      presicion={presicion}
+      precision={precision}
       selectButtonConf={selectButtonConf}
       serieLength={serieLength}
       yType={yType}

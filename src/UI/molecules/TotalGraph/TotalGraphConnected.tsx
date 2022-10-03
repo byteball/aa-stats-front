@@ -26,7 +26,7 @@ import TotalGraph from './TotalGraph';
 
 const TotalGraphConnected: FC = () => {
   const timeframe = useAppSelector(totalGraphTimeframeSelector);
-  const presicion = useMemo(
+  const precision = useMemo(
     () => (timeframe === 'daily' ? 'day' : 'hour'),
     [timeframe]
   );
@@ -203,7 +203,7 @@ const TotalGraphConnected: FC = () => {
       isSelectedPeriod={isSelectedPeriod}
       mouseX={mouseX}
       mouseY={mouseY}
-      presicion={presicion}
+      precision={precision}
       serieLength={serieLength}
       onContextMenu={handleOpenContextMenu}
       onContextMenuClose={handleCloseContextMenu}

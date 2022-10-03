@@ -31,7 +31,7 @@ const Router: FC = () => {
     <Routes>
       <Route element={<MainLayout />} path='*'>
         <Route element={<Home />} path='' />
-        <Route element={<Agent />} path='aa/:address' />
+        <Route element={<Agent />} path='address/:address' />
         <Route element={<NotFound />} path='*' />
       </Route>
       <Route element={<NotFound />} path='*' />

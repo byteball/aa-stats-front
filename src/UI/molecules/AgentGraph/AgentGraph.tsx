@@ -20,7 +20,7 @@ const AgentGraph: FC<IAgentGraphProps> = ({
   isSelectedPeriod,
   handleActivities,
   isSelectedActivities,
-  presicion,
+  precision,
   yType,
   isLoading,
   actionButtonsConf,
@@ -64,7 +64,7 @@ const AgentGraph: FC<IAgentGraphProps> = ({
               <LineChart
                 data={data}
                 fullDaysBetweenStartAndEnd={fullDaysBetweenStartAndEnd}
-                precision={presicion}
+                precision={precision}
                 serieLength={serieLength}
                 yType={yType}
               />

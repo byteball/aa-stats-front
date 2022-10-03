@@ -1,7 +1,6 @@
 import { FC, memo } from 'react';
 
 import { Box, SxProps } from '@mui/material';
-import { v4 } from 'uuid';
 
 interface IHighlightTextProps {
   text: string;
@@ -20,9 +19,10 @@ export const HighlightText: FC<IHighlightTextProps> = memo(
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return (
       <span>
-        {parts.map((part) => (
+        {parts.map((part, i) => (
           <Box
-            key={v4()}
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
             component='span'
             sx={
               part.toLowerCase() === highlight.toLowerCase()

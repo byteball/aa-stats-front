@@ -1,12 +1,16 @@
-import { ChangeEventHandler, FC, memo, useCallback } from 'react';
+import { ChangeEventHandler, FC, memo, useCallback, useState } from 'react';
 
 import { Box, MenuItem, TextField, Typography } from '@mui/material';
 
 import { coinIcon } from 'conf/constants';
-import { assetsIconsConf } from 'conf/uiControls';
 import { useStateUrlParams } from 'lib/useStateUrlParams';
 import { useAppDispatch, useAppSelector } from 'store';
-import { assetSelector, assetsSelector, handleAsset } from 'store/UI';
+import {
+  assetSelector,
+  assetsSelector,
+  darkModeSelector,
+  handleAsset,
+} from 'store/UI';
 
 import { styles } from './styles';
 
@@ -14,6 +18,9 @@ const AssetSelect: FC = () => {
   const dispatch = useAppDispatch();
   const asset = useAppSelector(assetSelector);
   const assets = useAppSelector(assetsSelector);
+  const darkMode = useAppSelector(darkModeSelector);
+  const [undefinedIcons, setUndefinedIcons] = useState<string[]>([]);
+
   const { setUrl } = useStateUrlParams();
   const onAssetChange: ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
@@ -25,13 +32,14 @@ const AssetSelect: FC = () => {
     [dispatch, setUrl]
   );
 
-  const getAssetIcon = useCallback(
-    (assetValue: string) =>
-      assetsIconsConf.find((aic) => aic.assets.some((a) => a === assetValue))
-        ?.icon || null,
+  const setUndefinedIconsBySymbol = useCallback(
+    (symbol: string) => () => setUndefinedIcons((p) => p.concat(symbol)),
     []
   );
-
+  const showCoinIcon = useCallback(
+    (symbol: string) => !undefinedIcons.includes(symbol),
+    [undefinedIcons]
+  );
   return (
     <TextField
       SelectProps={{ MenuProps: { sx: styles.menu } }}
@@ -50,26 +58,21 @@ const AssetSelect: FC = () => {
           <Typography sx={styles.label}>all assets</Typography>
         </Box>
       </MenuItem>
-      {/* <MenuItem value='GBYTE'>
-        <Box sx={styles.item}>
-          <Box sx={styles.icon}>
-            <img src={`${coinIcon}GBYTE.svg`} alt='GBYTE' />
-          </Box>
-          <Typography sx={styles.label}>GBYTE</Typography>
-        </Box>
-      </MenuItem> */}
-      {assets.map((ast) => (
-        <MenuItem key={ast.assetId} value={ast.assetSymbol}>
+      {assets.map(({ assetId, assetSymbol }) => (
+        <MenuItem key={assetId} value={assetSymbol}>
           <Box sx={styles.item}>
             <Box sx={styles.icon}>
-              {getAssetIcon(ast.assetSymbol) && (
+              {showCoinIcon(assetSymbol) && (
                 <img
-                  alt={ast.assetSymbol || undefined}
-                  src={`${coinIcon}${getAssetIcon(ast.assetSymbol)}`}
+                  alt=''
+                  src={`${coinIcon}/${assetSymbol}${
+                    darkMode ? '-INV' : ''
+                  }.svg`}
+                  onError={setUndefinedIconsBySymbol(assetSymbol)}
                 />
               )}
             </Box>
-            <Typography sx={styles.label}>{ast.assetSymbol}</Typography>
+            <Typography sx={styles.label}>{assetSymbol}</Typography>
           </Box>
         </MenuItem>
       ))}

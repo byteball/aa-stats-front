@@ -11,7 +11,7 @@ export const usePage = (): IUsePageOutput => {
   const loc = useLocation();
   const isHomePage = useMemo(() => loc.pathname === '/', [loc.pathname]);
   const isAgentPage = useMemo(
-    () => loc.pathname.indexOf('/aa/') !== -1,
+    () => loc.pathname.indexOf('/address/') !== -1,
     [loc.pathname]
   );
 

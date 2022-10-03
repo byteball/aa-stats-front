@@ -39,7 +39,7 @@ export const aastatsAPI = createApi({
   endpoints: (build) => ({
     getStatsForOneAddress: build.query<IAddress[], IAAStatsAddressReq>({
       query: (request) => ({
-        url: 'address',
+        url: '/address',
         method: 'POST',
         body: request,
       }),
@@ -51,7 +51,7 @@ export const aastatsAPI = createApi({
       IAAStatsAddressReq
     >({
       query: (request) => ({
-        url: 'address',
+        url: '/address',
         method: 'POST',
         body: request,
       }),
@@ -61,7 +61,7 @@ export const aastatsAPI = createApi({
     }),
     getTvlOverTimeForOneAddress: build.query<IAddressTvl[], IAAStatsTvlReq>({
       query: ({ from, to, asset, address, timeframe }) => ({
-        url: 'address/tvl',
+        url: '/address/tvl',
         method: 'POST',
         body:
           timeframe === 'daily'
@@ -76,7 +76,7 @@ export const aastatsAPI = createApi({
       IAAStatsTvlValuesForOneAddressReq
     >({
       query: (request) => ({
-        url: 'address/tvl',
+        url: '/address/tvl',
         method: 'POST',
         body: request,
       }),
@@ -86,7 +86,7 @@ export const aastatsAPI = createApi({
     }),
     getTotalTvlOverTime: build.query<Serie[], IAAStatsTotalTvl>({
       query: ({ from, to, asset, timeframe }) => ({
-        url: 'total/tvl',
+        url: '/total/tvl',
         method: 'POST',
         body:
           timeframe === 'daily'
@@ -99,7 +99,7 @@ export const aastatsAPI = createApi({
     }),
     getTotalTvlValues: build.query<ITotalTvl[], IAAStatsTotalTvlValuesReq>({
       query: (request) => ({
-        url: 'total/tvl',
+        url: '/total/tvl',
         method: 'POST',
         body: request,
       }),
@@ -109,7 +109,7 @@ export const aastatsAPI = createApi({
     }),
     getTotalActivityOverTime: build.query<Serie[], IAAStatsTotalActivity>({
       query: ({ asset, from, to, timeframe }) => ({
-        url: 'total/activity',
+        url: '/total/activity',
         method: 'POST',
         body: { asset, from, to, timeframe },
       }),
@@ -122,7 +122,7 @@ export const aastatsAPI = createApi({
       IAAStatsUSDInValuesReq
     >({
       query: (request) => ({
-        url: 'total/activity',
+        url: '/total/activity',
         method: 'POST',
         body: request,
       }),
@@ -132,7 +132,7 @@ export const aastatsAPI = createApi({
     }),
     getTopAAbyTvl: build.query<IRenderAATvl[], IAAStatsTopAAbyTvlReq>({
       query: (request) => ({
-        url: 'top/aa/tvl',
+        url: '/top/aa/tvl',
         method: 'POST',
         body: request,
       }),
@@ -142,7 +142,7 @@ export const aastatsAPI = createApi({
     }),
     getTopAAbyType: build.query<IRenderAddress[], IAAStatsTopAAbyTypeReq>({
       query: ({ asset, from, to, timeframe, limit, type }) => ({
-        url: `top/aa/${type}`,
+        url: `/top/aa/${type}`,
         method: 'POST',
         body: { asset, from, to, timeframe, limit },
       }),
@@ -151,7 +151,7 @@ export const aastatsAPI = createApi({
     }),
     getMostActiveAgents: build.query<IAddress[], IAAStatsMosActiveAgenstReq>({
       query: (request) => ({
-        url: 'top/aa/usd_amount_in',
+        url: '/top/aa/usd_amount_in',
         method: 'POST',
         body: request,
       }),
@@ -160,7 +160,7 @@ export const aastatsAPI = createApi({
     }),
     getTopAssets: build.query<IAsset[], IAAStatsTopAssetsReq>({
       query: (request) => ({
-        url: 'top/asset/tvl',
+        url: '/top/asset/tvl',
         method: 'POST',
         body: request,
       }),
@@ -168,7 +168,7 @@ export const aastatsAPI = createApi({
     }),
     getAsset: build.query<AssetsResponseType, void>({
       query: () => ({
-        url: 'assets',
+        url: '/assets',
         method: 'GET',
       }),
       providesTags: ['Assets'],
@@ -180,7 +180,7 @@ export const aastatsAPI = createApi({
       IGetTopAACombinedByTypeReq
     >({
       query: ({ type, from, to, timeframe, limit }) => ({
-        url: `top/aa/combined/${type}`,
+        url: `/top/aa/combined/${type}`,
         method: 'POST',
         body: { from, to, timeframe, limit },
       }),
