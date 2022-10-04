@@ -43,31 +43,6 @@ export const obyteApi = createApi({
   refetchOnReconnect: true,
   refetchOnMountOrArgChange: 60 * 60 * 24,
   endpoints: (build) => ({
-    // getDefinition: build.query<IDefinition | undefined, string>({
-    //   queryFn: () => ({ data: undefined }),
-    //   async onCacheEntryAdded(
-    //     arg,
-    //     { cacheDataLoaded, cacheEntryRemoved, updateCachedData, dispatch }
-    //   ) {
-    //     try {
-    //       await cacheDataLoaded;
-    //       const socket = getObyteClient();
-
-    //       const defData = await getDefinitionData(arg, socket);
-    //       updateCachedData((data) => ({ ...data, ...defData }));
-    //       await cacheEntryRemoved;
-    //     } catch (e) {
-    //       dispatch(
-    //         showSnackBar({
-    //           message:
-    //             e instanceof Error ? e.message : 'definition query error',
-    //           title: 'Definition Query',
-    //           severity: 'error',
-    //         })
-    //       );
-    //     }
-    //   },
-    // }),
     getDefinitions: build.query<IDefinedBaseAAData[], string[]>({
       queryFn: () => ({ data: [] }),
       async onCacheEntryAdded(
