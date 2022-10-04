@@ -40,6 +40,9 @@ export const obyteApi = createApi({
   baseQuery: fetchBaseQuery({
     mode: 'cors',
   }),
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  refetchOnMountOrArgChange: 60 * 60 * 24,
   endpoints: (build) => ({
     getDefinition: build.query<IDefinition | undefined, string>({
       queryFn: () => ({ data: undefined }),
