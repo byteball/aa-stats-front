@@ -20,9 +20,6 @@ export const aastatsAPI = createApi({
   reducerPath: 'aastatsAPI',
   baseQuery: fetchBaseQuery({
     baseUrl: apiKey,
-    prepareHeaders(headers) {
-      return headers;
-    },
   }),
   tagTypes: [
     'Address',
