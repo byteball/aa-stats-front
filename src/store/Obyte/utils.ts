@@ -3,7 +3,7 @@ import { Client } from 'obyte';
 import { isEmpty } from 'ramda';
 
 import { templates } from 'conf/templates';
-import { apiGet } from 'lib/api';
+import { apiGet, apiOriginGet } from 'lib/api';
 
 /** templated base agents */
 const templatedBaseAAs = templates.reduce(
@@ -13,24 +13,39 @@ const templatedBaseAAs = templates.reduce(
 
 /**
  * Get Definition of Agent
+ * @param doc_url doc url of base_aa
+ */
+export const getDefinitionData = async (
+  doc_url: string
+): Promise<IDefinition> => {
+  try {
+    return apiGet<IDefinition>(doc_url);
+  } catch (e) {
+    if (e instanceof Error) throw new Error(e.message);
+    throw new Error('getDefinitionData error');
+  }
+};
+
+/**
+ * Get Doc url of Agent
  * @param address address or baseAA of agent
  * @param client obyte.js Client
  */
-export const getDefinitionData = async (
+export const getDocUrl = async (
   address: string,
   client: Client
-): Promise<IDefinition> => {
+): Promise<string> => {
   try {
     const res = await client.api.getDefinition(address);
     if ('base_aa' in res[1]) {
       const def = await client.api.getDefinition(res[1].base_aa);
-      return apiGet<IDefinition>(def[1].doc_url);
+      return def[1].doc_url;
     }
-    if ('doc_url' in res[1]) return apiGet<IDefinition>(res[1].doc_url);
-    throw new Error('doc_url or base_aa is absent');
+    if ('doc_url' in res[1]) return res[1].doc_url;
+    return '';
   } catch (e) {
     if (e instanceof Error) throw new Error(e.message);
-    throw new Error('getDefFData error');
+    throw new Error('getDocUrl error');
   }
 };
 
@@ -278,28 +293,57 @@ export const getBaseAAwithUndefinedDefinition = (
  * Get array of base_aas with their definition
  * @param baseAAs array of base_aa or addresses
  * @param client obyte.js Client
+ * @param cors enables cors proxy
  */
 export const getBaseAAWithDefinition = async (
   baseAAs: string[],
-  client: Client
-): Promise<IBaseAAWithDefinition[]> =>
-  (
-    await Promise.allSettled(
+  client: Client,
+  cors = false
+): Promise<IBaseAAWithDefinition[]> => {
+  const baseAAwithDocUrls = (
+    await Promise.all(
       baseAAs.map(async (base_aa) => ({
         base_aa,
-        definition: await getDefinitionData(base_aa, client),
+        doc_url: await getDocUrl(base_aa, client),
       }))
     )
-  ).reduce((data: IBaseAAWithDefinition[], curr) => {
-    if (curr.status === 'fulfilled')
-      data.push({
-        ...curr.value,
-        definition: {
-          description: curr.value.definition.description,
-          homepage_url: curr.value.definition.homepage_url,
-          source_url: curr.value.definition.source_url,
-        },
-      });
+  ).filter((d) => d.doc_url);
 
-    return data;
-  }, []);
+  const uniqDocUrls = [...new Set(baseAAwithDocUrls.map((ba) => ba.doc_url))];
+
+  const settledUniqDefinitions = await Promise.allSettled(
+    uniqDocUrls.map(async (doc_url) => ({
+      doc_url,
+      definition: cors
+        ? await apiOriginGet<IDefinition>(doc_url)
+        : await getDefinitionData(doc_url),
+    }))
+  );
+
+  const fullfiledDefinitions = settledUniqDefinitions.reduce(
+    (data: { doc_url: string; definition: IDefinition }[], curr) => {
+      if (curr.status === 'fulfilled')
+        data.push({
+          ...curr.value,
+          definition: {
+            description: curr.value.definition.description,
+            homepage_url: curr.value.definition.homepage_url,
+            source_url: curr.value.definition.source_url,
+          },
+        });
+
+      return data;
+    },
+    []
+  );
+
+  return baseAAwithDocUrls.reduce(
+    (res: IBaseAAWithDefinition[], { base_aa, doc_url }) => {
+      const found = fullfiledDefinitions.find((d) => d.doc_url === doc_url);
+      if (found) res.push({ base_aa, definition: found.definition });
+
+      return res;
+    },
+    []
+  );
+};

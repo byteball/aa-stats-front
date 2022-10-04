@@ -22,7 +22,6 @@ import {
   getAddressesWithUndefinedSymbols,
   getBaseAAWithDefinition,
   getBaseAAwithUndefinedDefinition,
-  getDefinitionData,
   getTemplatedAddressesWithUndefinedAsset,
 } from './utils';
 
@@ -44,31 +43,31 @@ export const obyteApi = createApi({
   refetchOnReconnect: true,
   refetchOnMountOrArgChange: 60 * 60 * 24,
   endpoints: (build) => ({
-    getDefinition: build.query<IDefinition | undefined, string>({
-      queryFn: () => ({ data: undefined }),
-      async onCacheEntryAdded(
-        arg,
-        { cacheDataLoaded, cacheEntryRemoved, updateCachedData, dispatch }
-      ) {
-        try {
-          await cacheDataLoaded;
-          const socket = getObyteClient();
+    // getDefinition: build.query<IDefinition | undefined, string>({
+    //   queryFn: () => ({ data: undefined }),
+    //   async onCacheEntryAdded(
+    //     arg,
+    //     { cacheDataLoaded, cacheEntryRemoved, updateCachedData, dispatch }
+    //   ) {
+    //     try {
+    //       await cacheDataLoaded;
+    //       const socket = getObyteClient();
 
-          const defData = await getDefinitionData(arg, socket);
-          updateCachedData((data) => ({ ...data, ...defData }));
-          await cacheEntryRemoved;
-        } catch (e) {
-          dispatch(
-            showSnackBar({
-              message:
-                e instanceof Error ? e.message : 'definition query error',
-              title: 'Definition Query',
-              severity: 'error',
-            })
-          );
-        }
-      },
-    }),
+    //       const defData = await getDefinitionData(arg, socket);
+    //       updateCachedData((data) => ({ ...data, ...defData }));
+    //       await cacheEntryRemoved;
+    //     } catch (e) {
+    //       dispatch(
+    //         showSnackBar({
+    //           message:
+    //             e instanceof Error ? e.message : 'definition query error',
+    //           title: 'Definition Query',
+    //           severity: 'error',
+    //         })
+    //       );
+    //     }
+    //   },
+    // }),
     getDefinitions: build.query<IDefinedBaseAAData[], string[]>({
       queryFn: () => ({ data: [] }),
       async onCacheEntryAdded(
@@ -136,6 +135,16 @@ export const obyteApi = createApi({
           );
           dispatch(updateAgentsCacheByDefinition(baseAAWithDefinition));
 
+          /** 6. update cache by adresses with their base_aa and json`s definition by cors proxy */
+          const { agentsCache: agentsCache6 } = (getState() as TRootState)
+            .obyte;
+          const baseAAWithDefinitionByCP = await getBaseAAWithDefinition(
+            getBaseAAwithUndefinedDefinition(agentsCache6),
+            socket,
+            true
+          );
+          dispatch(updateAgentsCacheByDefinition(baseAAWithDefinitionByCP));
+
           await cacheEntryRemoved;
         } catch (e) {
           dispatch(
@@ -152,4 +161,4 @@ export const obyteApi = createApi({
   }),
 });
 
-export const { useGetDefinitionQuery, useGetDefinitionsQuery } = obyteApi;
+export const { useGetDefinitionsQuery } = obyteApi;
