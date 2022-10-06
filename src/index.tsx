@@ -10,7 +10,6 @@ import { GA_MEASUREMENT_ID } from 'conf/constants';
 import ErrorBoundary from 'errorBoundary';
 
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import appStore, { persistor } from './store';
 
 if (GA_MEASUREMENT_ID) ReactGA.initialize(GA_MEASUREMENT_ID);
@@ -29,5 +28,3 @@ ReactDOM.render(
   </StrictMode>,
   document.getElementById('root')
 );
-
-reportWebVitals();

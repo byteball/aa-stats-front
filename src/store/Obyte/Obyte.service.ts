@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Client } from 'obyte';
 import { isEmpty } from 'ramda';
 
+import { corsProxyUrl } from 'conf/constants';
 import { TRootState } from 'store';
 import { getAssetsMetadata } from 'store/AAstats';
 import { showSnackBar } from 'store/SnackStack';
@@ -111,14 +112,16 @@ export const obyteApi = createApi({
           dispatch(updateAgentsCacheByDefinition(baseAAWithDefinition));
 
           /** 6. update cache by adresses with their base_aa and json`s definition by cors proxy */
-          const { agentsCache: agentsCache6 } = (getState() as TRootState)
-            .obyte;
-          const baseAAWithDefinitionByCP = await getBaseAAWithDefinition(
-            getBaseAAwithUndefinedDefinition(agentsCache6),
-            socket,
-            true
-          );
-          dispatch(updateAgentsCacheByDefinition(baseAAWithDefinitionByCP));
+          if (corsProxyUrl) {
+            const { agentsCache: agentsCache6 } = (getState() as TRootState)
+              .obyte;
+            const baseAAWithDefinitionByCP = await getBaseAAWithDefinition(
+              getBaseAAwithUndefinedDefinition(agentsCache6),
+              socket,
+              true
+            );
+            dispatch(updateAgentsCacheByDefinition(baseAAWithDefinitionByCP));
+          }
 
           await cacheEntryRemoved;
         } catch (e) {
