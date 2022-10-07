@@ -30,13 +30,11 @@ const SearchResultsConnected: FC<ISearchResultsConnectedProps> = ({
   const searchedData = useMemo(() => {
     if (searchText.length > 0) {
       return [
-        ...fullFlattenDefinedData.filter(
-          (data) =>
-            data.address.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
+        ...fullFlattenDefinedData.filter((data) =>
+          data.address.toLowerCase().includes(searchText.toLowerCase())
         ),
-        ...fullFlattenDefinedData.filter(
-          (data) =>
-            data.label.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
+        ...fullFlattenDefinedData.filter((data) =>
+          data.label.toLowerCase().includes(searchText.toLowerCase())
         ),
       ].slice(0, 25);
     }
