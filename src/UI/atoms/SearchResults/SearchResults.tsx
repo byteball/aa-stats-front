@@ -25,7 +25,8 @@ const SearchResults: FC<ISearchResultsProps> = ({
         )}
         {data.map(({ address, label, tvl }, index, arr) => (
           <SearchedItem
-            key={address}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${address}-${index}`}
             address={address}
             arrLength={arr.length}
             autoFocus={autoFocus}
