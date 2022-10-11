@@ -2,7 +2,7 @@ import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 
 import {
   longPeriodsUiControls,
-  shortPeriodsUiControls,
+  tvlPeriodsUiControls,
   totalGraphActivitiesUiControls,
 } from 'conf/uiControls';
 import { useContextMenu } from 'lib/useContextMenu';
@@ -38,6 +38,11 @@ const TotalGraphConnected: FC = () => {
   const { mouseX, mouseY, handleOpenContextMenu, handleCloseContextMenu } =
     useContextMenu();
 
+  const tvlPeriodsMaxValue = useMemo(
+    () => Math.max(...tvlPeriodsUiControls.map((sP) => sP.value)),
+    []
+  );
+
   useEffect(() => {
     if (
       !selectedActivities.includes('usd_balance') &&
@@ -47,11 +52,11 @@ const TotalGraphConnected: FC = () => {
       dispatch(handleTotalGraphPeriodControl(30));
     else if (
       selectedActivities.includes('usd_balance') &&
-      selectedPeriod > 30 &&
+      selectedPeriod > tvlPeriodsMaxValue &&
       selectedPeriod !== 0
     )
-      dispatch(handleTotalGraphPeriodControl(30));
-  }, [dispatch, selectedActivities, selectedPeriod]);
+      dispatch(handleTotalGraphPeriodControl(tvlPeriodsMaxValue));
+  }, [dispatch, selectedActivities, selectedPeriod, tvlPeriodsMaxValue]);
 
   useEffect(() => {
     if (
@@ -93,9 +98,9 @@ const TotalGraphConnected: FC = () => {
           if (value === 'usd_balance') {
             dispatch(handleTotalGraphActivitiesControls([value]));
             setUrl({ activity: [value] });
-            if (selectedPeriod !== 30) {
-              dispatch(handleTotalGraphPeriodControl(30));
-              setUrl({ g_period: 30 });
+            if (selectedPeriod !== tvlPeriodsMaxValue) {
+              dispatch(handleTotalGraphPeriodControl(tvlPeriodsMaxValue));
+              setUrl({ g_period: tvlPeriodsMaxValue });
             }
           } else {
             const activity = [
@@ -106,9 +111,9 @@ const TotalGraphConnected: FC = () => {
             ].sort();
             dispatch(handleTotalGraphActivitiesControls(activity));
             setUrl({ activity });
-            if (selectedPeriod < 30 && selectedPeriod > 0) {
-              dispatch(handleTotalGraphPeriodControl(30));
-              setUrl({ g_period: 30 });
+            if (selectedPeriod < tvlPeriodsMaxValue && selectedPeriod > 0) {
+              dispatch(handleTotalGraphPeriodControl(tvlPeriodsMaxValue));
+              setUrl({ g_period: tvlPeriodsMaxValue });
             }
           }
         } else if (selectedActivities.length > 1) {
@@ -118,7 +123,7 @@ const TotalGraphConnected: FC = () => {
         }
       }
     },
-    [dispatch, selectedActivities, selectedPeriod, setUrl]
+    [dispatch, selectedActivities, selectedPeriod, setUrl, tvlPeriodsMaxValue]
   );
 
   const isSelectedActivities = useCallback(
@@ -149,7 +154,7 @@ const TotalGraphConnected: FC = () => {
 
   const actionButtonsConf = useMemo(() => {
     if (tvlSelected) {
-      return shortPeriodsUiControls;
+      return tvlPeriodsUiControls;
     }
     return longPeriodsUiControls;
   }, [tvlSelected]);

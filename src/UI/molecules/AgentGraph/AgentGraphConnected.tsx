@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import {
   agentGraphUiControls,
   allPeriodsUiControls,
-  shortPeriodsUiControls,
+  tvlPeriodsUiControls,
 } from 'conf/uiControls';
 import { useContextMenu } from 'lib/useContextMenu';
 import { useLineChart } from 'lib/useLineChart';
@@ -52,13 +52,18 @@ const AgentGraphConnected: FC = () => {
   const { mouseX, mouseY, handleOpenContextMenu, handleCloseContextMenu } =
     useContextMenu();
 
+  const tvlPeriodsMaxValue = useMemo(
+    () => Math.max(...tvlPeriodsUiControls.map((sP) => sP.value)),
+    []
+  );
+
   useEffect(() => {
     if (
       selectedActivities.includes('usd_balance' || 'balance') &&
-      selectedPeriod > 30
+      selectedPeriod > tvlPeriodsMaxValue
     )
-      dispatch(handleAgentGraphPeriodControl(30));
-  }, [dispatch, selectedActivities, selectedPeriod]);
+      dispatch(handleAgentGraphPeriodControl(tvlPeriodsMaxValue));
+  }, [dispatch, selectedActivities, selectedPeriod, tvlPeriodsMaxValue]);
 
   const handlePeriod = useCallback(
     (value: number) => () => {
@@ -98,10 +103,10 @@ const AgentGraphConnected: FC = () => {
             setUrl({ activity: [value] });
             if (
               (value === 'usd_balance' || value === 'balance') &&
-              (selectedPeriod > 30 || selectedPeriod === 0)
+              (selectedPeriod > tvlPeriodsMaxValue || selectedPeriod === 0)
             ) {
-              dispatch(handleAgentGraphPeriodControl(30));
-              setUrl({ g_period: 30 });
+              dispatch(handleAgentGraphPeriodControl(tvlPeriodsMaxValue));
+              setUrl({ g_period: tvlPeriodsMaxValue });
             }
           } else {
             const activity = [
@@ -120,7 +125,14 @@ const AgentGraphConnected: FC = () => {
         }
       }
     },
-    [dispatch, selectButtonConf, selectedActivities, selectedPeriod, setUrl]
+    [
+      dispatch,
+      selectButtonConf,
+      selectedActivities,
+      selectedPeriod,
+      setUrl,
+      tvlPeriodsMaxValue,
+    ]
   );
 
   const isSelectedActivities = useCallback(
@@ -151,7 +163,7 @@ const AgentGraphConnected: FC = () => {
 
   const actionButtonsConf = useMemo(() => {
     if (tvlSelected) {
-      return shortPeriodsUiControls;
+      return tvlPeriodsUiControls;
     }
     return allPeriodsUiControls;
   }, [tvlSelected]);

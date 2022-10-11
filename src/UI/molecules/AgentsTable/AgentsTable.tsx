@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { equals } from 'ramda';
 
-import { shortPeriodsUiControls } from 'conf/uiControls';
+import { tablePeriodsUiControls } from 'conf/uiControls';
 import ActionButtons from 'UI/atoms/ActionButtons/ActionButtons';
 import AgentItem from 'UI/atoms/AgentItem/AgentItem';
 import AgentTableHead from 'UI/atoms/AgentTableHead/AgentTableHead';
@@ -27,7 +27,7 @@ const AgentsTable: FC<IAgentsTableProps> = ({
         <Typography sx={styles.title}>Autonomous Agents Top</Typography>
         <ActionButtons
           color='primary'
-          config={shortPeriodsUiControls}
+          config={tablePeriodsUiControls}
           handler={handlePeriod}
           isSelected={isSelectedPeriod}
         />

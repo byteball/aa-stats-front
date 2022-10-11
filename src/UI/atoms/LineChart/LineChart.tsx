@@ -51,6 +51,8 @@ const LineChart: FC<ILineChartProps> = ({
         return { tickValues: 'every 3 hour', format: '%H:%M' };
       if (fullDaysBetweenStartAndEnd > 1 && fullDaysBetweenStartAndEnd < 8)
         return { tickValues: 'every 30 hour', format: '%b %d' };
+      if (fullDaysBetweenStartAndEnd > 30)
+        return { tickValues: 'every 10 day', format: '%b %d' };
       return { tickValues: 'every 4 day', format: '%b %d' };
     }
     if (fullDaysBetweenStartAndEnd <= 30) {

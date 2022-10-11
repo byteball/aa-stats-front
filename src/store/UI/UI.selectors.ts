@@ -3,8 +3,8 @@ import { createSelector } from '@reduxjs/toolkit';
 import {
   agentGraphUiControls,
   allPeriodsUiControls,
-  shortPeriodsUiControls,
   totalGraphActivitiesUiControls,
+  tablePeriodsUiControls,
 } from 'conf/uiControls';
 import { TRootState } from 'store';
 
@@ -47,7 +47,7 @@ export const agentsTablePeriodSelector = createSelector(
 export const agentsTableTimeframeSelector = createSelector(
   uiSelector,
   (ui): tfTypes =>
-    shortPeriodsUiControls.find((p) => p.value === ui.agentsTablePeriodControls)
+    tablePeriodsUiControls.find((p) => p.value === ui.agentsTablePeriodControls)
       ?.timeframe || 'daily'
 );
 
