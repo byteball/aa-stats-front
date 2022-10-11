@@ -1,6 +1,7 @@
-import { FC, MouseEvent, useCallback, useRef } from 'react';
+import { FC, memo, MouseEvent, useCallback, useRef } from 'react';
 
 import { Box, Skeleton, Typography } from '@mui/material';
+import { equals } from 'ramda';
 
 import { useMedia } from 'lib/useMedia';
 import ActionButtons from 'UI/atoms/ActionButtons/ActionButtons';
@@ -103,4 +104,4 @@ const AgentGraph: FC<IAgentGraphProps> = ({
   );
 };
 
-export default AgentGraph;
+export default memo(AgentGraph, (pP, nP) => equals(pP, nP));

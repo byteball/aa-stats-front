@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 
 import { Box, Typography } from '@mui/material';
+import { equals } from 'ramda';
 
 import { shortPeriodsUiControls } from 'conf/uiControls';
 import ActionButtons from 'UI/atoms/ActionButtons/ActionButtons';
@@ -46,4 +47,4 @@ const AgentsTable: FC<IAgentsTableProps> = ({
     </Box>
   </Box>
 );
-export default AgentsTable;
+export default memo(AgentsTable, (pP, nP) => equals(pP, nP));
