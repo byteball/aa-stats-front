@@ -1,4 +1,4 @@
-import { memo, lazy, FC, useEffect, useMemo } from 'react';
+import { lazy, FC, useEffect, useMemo } from 'react';
 
 import { Route, Routes, useLocation } from 'react-router-dom';
 
@@ -39,4 +39,4 @@ const Router: FC = () => {
   );
 };
 
-export default memo(Router);
+export default Router;

@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 
 import { Box } from '@mui/material';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -29,4 +29,4 @@ const DragLayout: FC<IDragLayoutTypes> = ({ children, ...props }) => {
   );
 };
 
-export default memo(DragLayout);
+export default DragLayout;

@@ -1,4 +1,4 @@
-import { FC, forwardRef, memo } from 'react';
+import { FC, forwardRef } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -39,4 +39,4 @@ const DragBox: FC<IDragBoxProps> = forwardRef(
   }
 );
 
-export default memo(DragBox);
+export default DragBox;

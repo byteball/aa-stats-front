@@ -1,5 +1,7 @@
 import { FC, memo } from 'react';
 
+import { equals } from 'ramda';
+
 import { useMedia } from 'lib/useMedia';
 import MostActiveAgentsWidget from 'UI/atoms/MostActiveAgentsWidget/MostActiveAgentsWidget';
 import TurnoverValueWidget from 'UI/atoms/TurnoverValueWidget/TurnoverValueWidget';
@@ -45,4 +47,6 @@ const HomeDashboardLayout: FC<IHomeDashboardLayoutProps> = ({
   );
 };
 
-export default memo(HomeDashboardLayout);
+export default memo(HomeDashboardLayout, (prevProps, nextProps) =>
+  equals(prevProps, nextProps)
+);

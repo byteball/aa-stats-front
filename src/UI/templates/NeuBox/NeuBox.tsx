@@ -1,4 +1,4 @@
-import { FC, forwardRef, memo } from 'react';
+import { FC, forwardRef } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -25,4 +25,4 @@ const NeuBox: FC<INeuBoxProps> = forwardRef(({ children, ...props }, ref) => {
   );
 });
 
-export default memo(NeuBox) as typeof Box;
+export default NeuBox as typeof Box;

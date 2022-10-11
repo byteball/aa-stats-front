@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FC, memo, useCallback, useState } from 'react';
+import { ChangeEventHandler, FC, useCallback, useState } from 'react';
 
 import { Box, MenuItem, TextField, Typography } from '@mui/material';
 
@@ -80,4 +80,4 @@ const AssetSelect: FC = () => {
   );
 };
 
-export default memo(AssetSelect);
+export default AssetSelect;

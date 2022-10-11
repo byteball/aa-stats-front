@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
@@ -46,4 +46,4 @@ const AgentsTable: FC<IAgentsTableProps> = ({
     </Box>
   </Box>
 );
-export default memo(AgentsTable);
+export default AgentsTable;
