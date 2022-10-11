@@ -1,5 +1,7 @@
 import { FC, memo } from 'react';
 
+import { equals } from 'ramda';
+
 import { useMedia } from 'lib/useMedia';
 import AgentInfoWidget from 'UI/atoms/AgentInfoWidget/AgentInfoWidget';
 import AgentTurnoverValueWidget from 'UI/atoms/AgentTurnoverValueWidget/AgentTurnoverValueWidget';
@@ -41,4 +43,6 @@ const AgentDashboardLayout: FC<IAgentDashboardLayoutProps> = ({
   );
 };
 
-export default memo(AgentDashboardLayout);
+export default memo(AgentDashboardLayout, (prevProps, nextProps) =>
+  equals(prevProps, nextProps)
+);

@@ -21,6 +21,9 @@ export const styles: Record<string, SxProps> = {
     alignItems: 'center',
     overflow: 'hidden',
     gap: '5px',
+    '&:focus': {
+      backgroundColor: '#00000066',
+    },
   },
   creds: {
     display: 'flex',

@@ -1,4 +1,4 @@
-import { FC, memo, MouseEvent, useCallback, useRef } from 'react';
+import { FC, MouseEvent, useCallback, useRef } from 'react';
 
 import { Box, Skeleton, Typography } from '@mui/material';
 
@@ -85,4 +85,4 @@ const TotalGraph: FC<ITotalGraphProps> = ({
   );
 };
 
-export default memo(TotalGraph);
+export default TotalGraph;

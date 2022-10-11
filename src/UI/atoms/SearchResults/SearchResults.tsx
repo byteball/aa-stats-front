@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 
 import { Fade, MenuItem, MenuList, Paper, Typography } from '@mui/material';
 
@@ -47,4 +47,4 @@ const SearchResults: FC<ISearchResultsProps> = ({
   </Fade>
 );
 
-export default memo(SearchResults);
+export default SearchResults;

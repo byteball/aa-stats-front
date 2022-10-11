@@ -1,4 +1,4 @@
-import { FC, memo, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 
 import { Box, Divider, Typography } from '@mui/material';
 import { PointTooltipProps } from '@nivo/line';
@@ -12,7 +12,7 @@ const LineChartTooltip: FC<PointTooltipProps> = ({ point }) => {
 
   const printedY = useMemo(
     () =>
-      `${yFormatted}`.indexOf('$') !== -1
+      `${yFormatted}`.includes('$')
         ? usd(+y, 2)
         : (+y).toLocaleString(navigator.language || 'en-US', {
             maximumFractionDigits: 2,
@@ -51,4 +51,4 @@ const LineChartTooltip: FC<PointTooltipProps> = ({ point }) => {
   );
 };
 
-export default memo(LineChartTooltip);
+export default LineChartTooltip;

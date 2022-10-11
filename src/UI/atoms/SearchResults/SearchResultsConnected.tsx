@@ -31,10 +31,10 @@ const SearchResultsConnected: FC<ISearchResultsConnectedProps> = ({
     if (searchText.length > 0) {
       return [
         ...fullFlattenDefinedData.filter((data) =>
-          data.address.toLowerCase().includes(searchText.toLowerCase())
+          data.label.toLowerCase().includes(searchText.toLowerCase())
         ),
         ...fullFlattenDefinedData.filter((data) =>
-          data.label.toLowerCase().includes(searchText.toLowerCase())
+          data.address.toLowerCase().includes(searchText.toLowerCase())
         ),
       ].slice(0, 25);
     }
