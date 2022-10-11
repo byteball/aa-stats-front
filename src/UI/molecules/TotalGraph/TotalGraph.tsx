@@ -1,6 +1,7 @@
-import { FC, MouseEvent, useCallback, useRef } from 'react';
+import { FC, memo, MouseEvent, useCallback, useRef } from 'react';
 
 import { Box, Skeleton, Typography } from '@mui/material';
+import { equals } from 'ramda';
 
 import { totalGraphActivitiesUiControls } from 'conf/uiControls';
 import ActionButtons from 'UI/atoms/ActionButtons/ActionButtons';
@@ -85,4 +86,4 @@ const TotalGraph: FC<ITotalGraphProps> = ({
   );
 };
 
-export default TotalGraph;
+export default memo(TotalGraph, (pP, nP) => equals(pP, nP));
