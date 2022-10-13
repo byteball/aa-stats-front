@@ -9,8 +9,8 @@ export const longPeriodsUiControls: IUiControls[] = [
 
 export const tvlPeriodsUiControls: IUiControls[] = [
   { label: '24h', value: 1, timeframe: 'hourly', labelMobile: '24h' },
-  { label: '7 Days', value: 7, timeframe: 'daily', labelMobile: '7d' },
-  { label: '30 Days', value: 30, timeframe: 'daily', labelMobile: '30d' },
+  { label: '7 Days', value: 7, timeframe: 'hourly', labelMobile: '7d' },
+  { label: '30 Days', value: 30, timeframe: 'hourly', labelMobile: '30d' },
   { label: '90 Days', value: 90, timeframe: 'daily', labelMobile: '90d' },
 ];
 
