@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from 'react';
+import { FC, memo, useCallback, useMemo } from 'react';
 
 import { ResponsiveLine } from '@nivo/line';
 
@@ -184,4 +184,4 @@ const LineChart: FC<ILineChartProps> = ({
   );
 };
 
-export default LineChart;
+export default memo(LineChart);

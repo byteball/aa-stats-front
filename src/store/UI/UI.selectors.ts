@@ -32,6 +32,19 @@ export const totalGraphActivityControl = createSelector(
   (ui) => ui.totalGraphActivitiesControls
 );
 
+// export const totalGraphTimeframeSelector = createSelector(
+//   totalGraphActivityControl,
+//   totalGraphControlValue,
+//   ([control], period): tfTypes => {
+//     if (control === 'usd_balance' && period > 30) return 'daily';
+
+//     return (
+//       totalGraphActivitiesUiControls.find((c) => c.value === control)
+//         ?.timeframe || 'daily'
+//     );
+//   }
+// );
+
 export const totalGraphTimeframeSelector = createSelector(
   totalGraphActivityControl,
   ([control]): tfTypes =>
