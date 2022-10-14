@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useCallback } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
@@ -13,13 +14,27 @@ interface UrlParams {
 type keyType = keyof UrlParams;
 
 interface IUseStateUrlParamsOutput {
-  // eslint-disable-next-line no-unused-vars
   setUrl: (searchParams: UrlParams) => void;
   params: URLSearchParams;
+  getParamsString: (searchParams: UrlParams) => string;
 }
 
 export const useStateUrlParams = (): IUseStateUrlParamsOutput => {
   const [params, setParams] = useSearchParams();
+
+  const getParamsString = useCallback((searchParams: UrlParams) => {
+    const strArr = Object.keys(searchParams).reduce((res: string[], key) => {
+      const value = searchParams[key as keyType];
+      if (Array.isArray(value)) {
+        res.push(`${key}=${value.join('-')}`);
+      } else {
+        res.push(`${key}=${value}`);
+      }
+
+      return res;
+    }, []);
+    return strArr.join('&');
+  }, []);
 
   const setUrl = useCallback(
     (searchParams: UrlParams) => {
@@ -37,11 +52,11 @@ export const useStateUrlParams = (): IUseStateUrlParamsOutput => {
             : String(value);
           params.append(key, urlParam);
         }
-        setParams(params);
       });
+      setParams(params);
     },
     [params, setParams]
   );
 
-  return { params, setUrl };
+  return { params, setUrl, getParamsString };
 };

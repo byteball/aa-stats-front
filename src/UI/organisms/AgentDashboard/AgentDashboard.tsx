@@ -1,7 +1,7 @@
 import { FC, memo, useCallback, useEffect } from 'react';
 
 import { equals } from 'ramda';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { cleanUndef } from 'lib/clearUndef';
 import { useStateUrlParams } from 'lib/useStateUrlParams';
@@ -23,6 +23,8 @@ const AgentDashboard: FC = () => {
   const initialAgentPageSearchParams = useAppSelector(
     initialAgentPageSearchParamsSelector
   );
+  const [params] = useSearchParams();
+
   const handleLayouts = useCallback(
     (curr, allLayouts: ReactGridLayout.Layouts) => {
       cleanUndef(allLayouts);
@@ -36,7 +38,7 @@ const AgentDashboard: FC = () => {
   );
 
   useEffect(() => {
-    if (address) setUrl(initialAgentPageSearchParams);
+    if (address && !params.toString()) setUrl(initialAgentPageSearchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 

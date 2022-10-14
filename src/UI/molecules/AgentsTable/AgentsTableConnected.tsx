@@ -18,6 +18,7 @@ import {
   agentsTableTimeframeSelector,
   increaseAgentsTableDataLimit,
   agentsTableLimitSelector,
+  initialAgentPageSearchParamsSelector,
 } from 'store/UI';
 
 import AgentsTable from './AgentsTable';
@@ -29,9 +30,10 @@ const AgentsTableConnected: FC = () => {
   const timeframe = useAppSelector(agentsTableTimeframeSelector);
   const type = useAppSelector(agentsTableSortTypeSelector);
   const limit = useAppSelector(agentsTableLimitSelector);
+  const params = useAppSelector(initialAgentPageSearchParamsSelector);
   const { from, to } = useTimeframe(selectedPeriod, timeframe);
   const loaderRef = useRef<HTMLDivElement | null>(null);
-  const { setUrl } = useStateUrlParams();
+  const { setUrl, getParamsString } = useStateUrlParams();
 
   const handlePeriod = useCallback(
     (value: number) => () => {
@@ -56,10 +58,10 @@ const AgentsTableConnected: FC = () => {
 
   const handleNavigateFabric = useCallback(
     (address: string) => () => {
-      nav(`/address/${address}`);
+      nav(`/address/${address}?${getParamsString(params)}`);
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     },
-    [nav]
+    [getParamsString, nav, params]
   );
 
   const isSortSelected = useCallback(

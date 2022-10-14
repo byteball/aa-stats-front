@@ -1,10 +1,16 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+import { useStateUrlParams } from 'lib/useStateUrlParams';
+import { useAppSelector } from 'store';
+import { initialHomeSearchParamsSelector } from 'store/UI';
+
 import HelmetTitle from '../../UI/atoms/Meta/Meta';
 
 const NotFound = (): JSX.Element => {
   const nav = useNavigate();
+  const params = useAppSelector(initialHomeSearchParamsSelector);
+  const { getParamsString } = useStateUrlParams();
   return (
     <>
       <HelmetTitle
@@ -29,7 +35,7 @@ const NotFound = (): JSX.Element => {
           color='secondary'
           size='large'
           variant='contained'
-          onClick={() => nav('/')}
+          onClick={() => nav(`/?${getParamsString(params)}`)}
         >
           back to safe
         </Button>
