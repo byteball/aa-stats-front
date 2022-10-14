@@ -277,10 +277,20 @@ const AgentGraphConnected: FC = () => {
         ...new Set(
           data.filter((d) => d.symbol !== undefined).map((t) => t.asset)
         ),
-      ].map((assetId) => ({
-        assetId,
-        assetSymbol: data.find((a) => a.asset === assetId)?.symbol || 'GBYTE',
-      }));
+      ]
+        .map((assetId) => ({
+          assetId,
+          assetSymbol: data.find((a) => a.asset === assetId)?.symbol || 'GBYTE',
+        }))
+        .sort((a, b) => {
+          if (a.assetSymbol < b.assetSymbol) {
+            return -1;
+          }
+          if (a.assetSymbol > b.assetSymbol) {
+            return 1;
+          }
+          return 0;
+        });
 
       if (!equals(selectedAssets, assets)) {
         dispatch(handleAssets(assets));

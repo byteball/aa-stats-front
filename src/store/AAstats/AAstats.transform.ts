@@ -94,11 +94,22 @@ export const transformTvlOverTimeForOneAddress = (
   value: 'usd_balance' | 'balance'
 ): Serie[] => {
   if (data && data.length > 0) {
-    const assets = data.reduce((res: IAssetData[], curr) => {
-      if (!res.find((a) => a.assetSymbol === curr.symbol))
-        res.push({ assetId: curr.asset, assetSymbol: curr.symbol });
-      return res;
-    }, []);
+    const assets = data
+      .reduce((res: IAssetData[], curr) => {
+        if (!res.find((a) => a.assetSymbol === curr.symbol))
+          res.push({ assetId: curr.asset, assetSymbol: curr.symbol });
+        return res;
+      }, [])
+      .filter((a) => a.assetSymbol != null)
+      .sort((a, b) => {
+        if (a.assetSymbol < b.assetSymbol) {
+          return -1;
+        }
+        if (a.assetSymbol > b.assetSymbol) {
+          return 1;
+        }
+        return 0;
+      });
     if (asset === 'all') {
       if (value === 'balance') {
         const hashByPeriod: Record<number, number> = data.reduce(
