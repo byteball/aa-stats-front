@@ -34,15 +34,9 @@ export const totalGraphActivityControl = createSelector(
 
 export const totalGraphTimeframeSelector = createSelector(
   totalGraphActivityControl,
-  totalGraphControlValue,
-  ([control], period): tfTypes => {
-    if (control === 'usd_balance' && period > 30) return 'daily';
-
-    return (
-      totalGraphActivitiesUiControls.find((c) => c.value === control)
-        ?.timeframe || 'daily'
-    );
-  }
+  ([control]): tfTypes =>
+    totalGraphActivitiesUiControls.find((c) => c.value === control)
+      ?.timeframe || 'daily'
 );
 
 export const agentsTablePeriodSelector = createSelector(
@@ -94,7 +88,6 @@ export const agentGraphTimeframeSelector = createSelector(
   agentGraphPeriodControlSelector,
   ([control], value): tfTypes => {
     if (control === 'usd_balance' || control === 'balance') {
-      if (value > 30) return 'daily';
       return (
         agentGraphUiControls.find((agc) => agc.value === control)?.timeframe ||
         'hourly'

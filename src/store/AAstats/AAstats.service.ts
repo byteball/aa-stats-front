@@ -56,18 +56,21 @@ export const aastatsAPI = createApi({
       providesTags: ['Address'],
       transformResponse: transformUsdInValuesForOneAddress,
     }),
-    getTvlOverTimeForOneAddress: build.query<IAddressTvl[], IAAStatsTvlReq>({
-      query: ({ from, to, asset, address, timeframe }) => ({
+
+    getTvlOverTimeForOneAddress: build.query<Serie[], IAAStatsTvlReq>({
+      query: ({ from, to, address }) => ({
         url: '/address/tvl',
         method: 'POST',
-        body:
-          timeframe === 'daily'
-            ? { from: from * 24, to: to * 24, asset, address }
-            : { from, to, asset, address },
+        body: { from, to, address },
       }),
       providesTags: ['TvlForAddress'],
-      transformResponse: transformTvlOverTimeForOneAddress,
+      transformResponse: (
+        data: IAddressTvlWithDecimals[],
+        _,
+        { asset, color, label, value }
+      ) => transformTvlOverTimeForOneAddress(data, asset, color, label, value),
     }),
+
     getTvlOverTimeValuesForOneAddress: build.query<
       number[],
       IAAStatsTvlValuesForOneAddressReq

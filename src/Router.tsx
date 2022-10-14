@@ -3,7 +3,7 @@ import { lazy, FC, useEffect, useMemo } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { fireNavigationAnalyticsEvent } from 'lib/analytics';
-import { useBeBack } from 'lib/useBeBack';
+// import { useBeBack } from 'lib/useBeBack';
 
 import NotFound from './pages/NotFound/NotFound';
 import MainLayout from './UI/templates/MainLayout/MainLayout';
@@ -25,7 +25,7 @@ const Router: FC = () => {
     fireNavigationAnalyticsEvent(fullUrl);
   }, [fullUrl, loc.search]);
 
-  useBeBack();
+  // useBeBack();
 
   return (
     <Routes>
