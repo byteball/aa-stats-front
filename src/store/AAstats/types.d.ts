@@ -61,7 +61,11 @@ interface IAsset {
 }
 
 type IAAStatsAddressReq = Omit<IAAStatsReq, 'period' | 'limit' | 'asset'>;
-type IAAStatsTvlReq = Omit<IAAStatsReq, 'period' | 'limit'>;
+type IAAStatsTvlReq = Omit<IAAStatsReq, 'period' | 'limit'> & {
+  color: string;
+  label: string;
+  value: 'usd_balance' | 'balance';
+};
 type IAAStatsTvlValuesForOneAddressReq = Pick<
   IAAStatsReq,
   'address' | 'from' | 'to'

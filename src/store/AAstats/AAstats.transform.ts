@@ -53,11 +53,10 @@ export const transformTotalActivity = (
 ): Serie[] => {
   const { slices, timeframe } = arg;
   if (Array.isArray(data) && data.length > 0) {
-    data.sort((a, b) => b.period - a.period);
     return slices.map((slice) => ({
       id: slice.label,
       color: slice.color,
-      data: data.map((d) => ({
+      data: data.reverse().map((d) => ({
         x:
           timeframe === 'daily'
             ? new Date(d.period * 3600 * 1000 * 24)
@@ -88,18 +87,119 @@ export const transformTopAA = (
 };
 
 export const transformTvlOverTimeForOneAddress = (
-  data: IAddressTvlWithDecimals[] | undefined
-): IAddressTvl[] => {
-  if (Array.isArray(data) && data.length > 0) {
-    data.sort((a, b) => b.period - a.period);
-    return data.map((address) => ({
-      address: address.address,
-      asset: address.asset,
-      period: address.period,
-      balance: address.balance / 10 ** address.decimals,
-      usd_balance: address.usd_balance,
-      symbol: address.symbol,
-    }));
+  data: IAddressTvlWithDecimals[] | undefined,
+  asset: string,
+  color: string,
+  label: string,
+  value: 'usd_balance' | 'balance'
+): Serie[] => {
+  if (data && data.length > 0) {
+    const assets = data.reduce((res: IAssetData[], curr) => {
+      if (!res.find((a) => a.assetSymbol === curr.symbol))
+        res.push({ assetId: curr.asset, assetSymbol: curr.symbol });
+      return res;
+    }, []);
+    if (asset === 'all') {
+      if (value === 'balance') {
+        const hashByPeriod: Record<number, number> = data.reduce(
+          (res: Record<number, number>, curr) => {
+            if (Object.hasOwn(res, curr.period)) {
+              res[curr.period] += curr.balance / 10 ** curr.decimals;
+            } else {
+              Object.assign(res, {
+                [curr.period]: curr.balance / 10 ** curr.decimals,
+              });
+            }
+
+            return res;
+          },
+          {}
+        );
+
+        return [
+          {
+            id: label,
+            label,
+            color,
+            data: Object.keys(hashByPeriod)
+              .map((period) => ({
+                x: new Date(+period * 3600 * 1000),
+                y: hashByPeriod[+period],
+              }))
+              .reverse(),
+            assets,
+          },
+        ];
+      }
+      const hashByPeriod: Record<number, number> = data.reduce(
+        (res: Record<number, number>, curr) => {
+          if (Object.hasOwn(res, curr.period)) {
+            res[curr.period] += curr.usd_balance;
+          } else {
+            Object.assign(res, {
+              [curr.period]: curr.usd_balance,
+            });
+          }
+
+          return res;
+        },
+        {}
+      );
+
+      return [
+        {
+          id: label,
+          label,
+          color,
+          data: Object.keys(hashByPeriod)
+            .map((period) => ({
+              x: new Date(+period * 3600 * 1000),
+              y: hashByPeriod[+period],
+            }))
+            .reverse(),
+          assets,
+        },
+      ];
+    }
+    if (value === 'balance') {
+      return [
+        {
+          id: label,
+          label,
+          color,
+          data: data
+            .reduce((res: { x: Date; y: number }[], curr) => {
+              if (curr.symbol === asset)
+                res.push({
+                  x: new Date(curr.period * 3600 * 1000),
+                  y: curr.balance / 10 ** curr.decimals,
+                });
+              return res;
+            }, [])
+            .reverse(),
+          assets,
+        },
+      ];
+    }
+    return [
+      {
+        id: label,
+        label,
+        color,
+        data: data
+          .reduce((res: { x: Date; y: number }[], curr) => {
+            if (curr.symbol === asset)
+              res.push({
+                x: new Date(curr.period * 3600 * 1000),
+                y: curr.usd_balance,
+              });
+
+            return res;
+          }, [])
+          .reverse(),
+        assets,
+      },
+    ];
   }
   return [];
 };
@@ -122,16 +222,15 @@ export const transformTotalTvl = (
   arg: IAAStatsTotalTvl
 ): Serie[] => {
   const { timeframe, conf } = arg;
-  if (Array.isArray(data) && data.length > 0) {
-    data.sort((a, b) => b.period - a.period);
+  if (data && data.length > 0) {
     if (timeframe === 'daily') {
-      const dailyTvlPeriods = Array.from(
-        new Set(data.map((d) => Math.floor(d.period / 24)))
-      );
+      const dailyTvlPeriods = [
+        ...new Set(data.reverse().map((d) => Math.floor(d.period / 24))),
+      ];
       const dailyTvl = dailyTvlPeriods.map((period) => {
-        const hoursTvlByDay = data.filter(
-          (d) => Math.floor(d.period / 24) === period
-        );
+        const hoursTvlByDay = data
+          .reverse()
+          .filter((d) => Math.floor(d.period / 24) === period);
         const middle =
           hoursTvlByDay.reduce((accu, curr) => accu + curr.usd_balance, 0) /
           hoursTvlByDay.length;
@@ -153,7 +252,7 @@ export const transformTotalTvl = (
       {
         id: conf.label,
         color: conf.color,
-        data: data.map((d) => ({
+        data: data.reverse().map((d) => ({
           x: new Date(d.period * 3600 * 1000),
           y: d.usd_balance,
         })),
@@ -202,7 +301,7 @@ export const transformTvlOverTimeValuesForOneAddress = (
 ): number[] => {
   if (Array.isArray(data) && data.length > 0) {
     if (Array.from(new Set(data.map((d) => d.asset))).length > 1) {
-      const periods = Array.from(new Set(data.map((d) => d.period)));
+      const periods = [...new Set(data.map((d) => d.period))];
       const merged = periods.map((period) => {
         const dataForPeriod = data.filter((d) => d.period === period);
         return dataForPeriod.reduce(

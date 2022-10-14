@@ -30,15 +30,14 @@ export const useStateUrlParams = (): IUseStateUrlParamsOutput => {
             ? String(value.join('-'))
             : String(value);
           params.set(key, urlParam);
-          setParams(params);
         } else {
           const value = searchParams[key as keyType];
           const urlParam = Array.isArray(value)
             ? String(value.join('-'))
             : String(value);
           params.append(key, urlParam);
-          setParams(params);
         }
+        setParams(params);
       });
     },
     [params, setParams]

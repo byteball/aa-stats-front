@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 
+import { Serie } from '@nivo/line';
 import { equals } from 'ramda';
 import { useParams } from 'react-router-dom';
 
@@ -178,12 +180,11 @@ const AgentGraphConnected: FC = () => {
     { skip: !!tvlSelected }
   );
 
-  const graphData = useMemo(() => {
-    let addressData = Array.isArray(data) ? data : [];
+  const graphData: Serie[] = useMemo(() => {
+    let addressData = data || [];
     if (asset === 'all') {
-      const uniqPeriods = Array.from(
-        new Set(addressData.map((ad) => ad.period))
-      );
+      const uniqPeriods = [...new Set(addressData.map((ad) => ad.period))];
+
       addressData = uniqPeriods.map((uniqPeriod) => {
         const thisPeriodData = addressData.filter(
           (ad) => ad.period === uniqPeriod
@@ -214,6 +215,7 @@ const AgentGraphConnected: FC = () => {
     } else {
       addressData = addressData.filter((ad) => ad.symbol === asset);
     }
+
     return slices.map(({ label, color, value }) => ({
       id: label,
       color,
@@ -237,87 +239,13 @@ const AgentGraphConnected: FC = () => {
         from,
         to,
         timeframe,
+        asset,
+        color: tvlConf!.color,
+        label: tvlConf!.value,
+        value: tvlConf!.value as 'usd_balance' | 'balance',
       },
       { skip: !tvlSelected }
     );
-
-  const tvlGraphData = useMemo(() => {
-    let addressTvlData = Array.isArray(tvlData) ? tvlData : [];
-
-    if (asset === 'all') {
-      const uniqPeriods = Array.from(
-        new Set(addressTvlData.map((atd) => atd.period))
-      );
-      addressTvlData = uniqPeriods.map((uniqPeriod) => {
-        const thisPeriodData = addressTvlData.filter(
-          (atd) => atd.period === uniqPeriod
-        );
-        return thisPeriodData.reduce(
-          (accu: IAddressTvl, curr) => ({
-            ...accu,
-            balance: accu.balance + curr.balance,
-            usd_balance: accu.usd_balance + curr.usd_balance,
-          }),
-          {
-            ...thisPeriodData[0],
-            balance: 0,
-            usd_balance: 0,
-          }
-        );
-      });
-    } else {
-      addressTvlData = addressTvlData.filter((atd) => atd.symbol === asset);
-    }
-
-    if (addressTvlData.length > 0 && tvlConf) {
-      if (timeframe === 'daily') {
-        const dailyTvlPeriods = Array.from(
-          new Set(addressTvlData.map((d) => Math.floor(d.period / 24)))
-        );
-        const dailyTvl = dailyTvlPeriods.map((period) => {
-          const hoursTvlByDay = addressTvlData.filter(
-            (d) => Math.floor(d.period / 24) === period
-          );
-          return {
-            period,
-            usd_balance:
-              hoursTvlByDay.reduce((accu, curr) => accu + curr.usd_balance, 0) /
-              hoursTvlByDay.length,
-            balance:
-              hoursTvlByDay.reduce((accu, curr) => accu + curr.balance, 0) /
-              hoursTvlByDay.length,
-          };
-        });
-        return [
-          {
-            id: tvlConf.label,
-            color: tvlConf.color,
-            data: dailyTvl.map((d) => ({
-              x: new Date(d.period * 3600 * 1000 * 24),
-              y:
-                tvlConf.value === 'balance' || tvlConf.value === 'usd_balance'
-                  ? d[tvlConf.value]
-                  : d.usd_balance,
-            })),
-          },
-        ];
-      }
-      return [
-        {
-          id: tvlConf.label,
-          color: tvlConf.color,
-          data: addressTvlData.map((d) => ({
-            x: new Date(d.period * 3600 * 1000),
-            y:
-              tvlConf.value === 'balance' || tvlConf.value === 'usd_balance'
-                ? d[tvlConf.value]
-                : d.usd_balance,
-          })),
-        },
-      ];
-    }
-    return [];
-  }, [asset, timeframe, tvlConf, tvlData]);
 
   const isLoading = useMemo(
     () => (tvlSelected ? isTvlFetching : isFetching),
@@ -326,25 +254,17 @@ const AgentGraphConnected: FC = () => {
 
   const totalData = useMemo(() => {
     if (tvlSelected) {
-      return tvlGraphData;
+      return tvlData || [];
     }
     return graphData;
-  }, [graphData, tvlSelected, tvlGraphData]);
+  }, [graphData, tvlSelected, tvlData]);
 
   const { fullDaysBetweenStartAndEnd, isEveryValOfSerieIsNull, serieLength } =
     useLineChart(totalData);
 
   useEffect(() => {
-    if (tvlSelected && tvlData) {
-      const assets = [
-        ...new Set(
-          tvlData.filter((d) => d.symbol !== undefined).map((t) => t.asset)
-        ),
-      ].map((assetId) => ({
-        assetId,
-        assetSymbol:
-          tvlData.find((a) => a.asset === assetId)?.symbol || 'GBYTE',
-      }));
+    if (tvlSelected && tvlData && tvlData[0] && tvlData[0].assets) {
+      const { assets } = tvlData[0] as Serie & { assets: IAssetData[] };
 
       if (!equals(selectedAssets, assets)) {
         dispatch(handleAssets(assets));
