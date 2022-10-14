@@ -2,8 +2,10 @@ import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { useStateUrlParams } from 'lib/useStateUrlParams';
 import { useAppSelector } from 'store';
 import { fullFlattenDefinedDataSelector } from 'store/Obyte';
+import { initialAgentPageSearchParamsSelector } from 'store/UI';
 
 import SearchResults from './SearchResults';
 
@@ -17,14 +19,16 @@ const SearchResultsConnected: FC<ISearchResultsConnectedProps> = ({
 }) => {
   const nav = useNavigate();
   const fullFlattenDefinedData = useAppSelector(fullFlattenDefinedDataSelector);
+  const params = useAppSelector(initialAgentPageSearchParamsSelector);
+  const { getParamsString } = useStateUrlParams();
 
   const handleAgentsPageReplaceFabric = useCallback(
     (address: string) => () => {
-      nav(`address/${address}`);
+      nav(`address/${address}?${getParamsString(params)}`);
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
       onClose();
     },
-    [nav, onClose]
+    [getParamsString, nav, onClose, params]
   );
 
   const searchedData = useMemo(() => {
