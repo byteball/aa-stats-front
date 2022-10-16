@@ -33,7 +33,20 @@ const AgentsTableConnected: FC = () => {
   const params = useAppSelector(initialAgentPageSearchParamsSelector);
   const { from, to } = useTimeframe(selectedPeriod, timeframe);
   const loaderRef = useRef<HTMLDivElement | null>(null);
-  const { setUrl, getParamsString } = useStateUrlParams();
+  const { tableSortParam, tablePeriodParam, setUrl, getParamsString } =
+    useStateUrlParams();
+
+  useEffect(() => {
+    if (tableSortParam !== type) {
+      dispatch(handleAgentsTableSortType(tableSortParam));
+    }
+  }, [dispatch, tableSortParam, type]);
+
+  useEffect(() => {
+    if (tablePeriodParam !== selectedPeriod) {
+      dispatch(handleAgentsTablePeriodControl(tablePeriodParam));
+    }
+  }, [dispatch, selectedPeriod, tablePeriodParam]);
 
   const handlePeriod = useCallback(
     (value: number) => () => {

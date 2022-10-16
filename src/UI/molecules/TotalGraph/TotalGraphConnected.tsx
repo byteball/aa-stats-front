@@ -1,5 +1,7 @@
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 
+import { equals } from 'ramda';
+
 import {
   longPeriodsUiControls,
   tvlPeriodsUiControls,
@@ -34,7 +36,7 @@ const TotalGraphConnected: FC = () => {
   const selectedPeriod = useAppSelector(totalGraphControlValue);
   const selectedActivities = useAppSelector(totalGraphActivityControl);
   const { from, to } = useTimeframe(selectedPeriod, timeframe);
-  const { setUrl } = useStateUrlParams();
+  const { totalActivityParam, totalPeriodParam, setUrl } = useStateUrlParams();
   const { mouseX, mouseY, handleOpenContextMenu, handleCloseContextMenu } =
     useContextMenu();
 
@@ -72,6 +74,18 @@ const TotalGraphConnected: FC = () => {
       dispatch(handleTotalGraphActivitiesControls(['usd_balance']));
     }
   }, [dispatch, selectedActivities]);
+
+  useEffect(() => {
+    if (!equals(totalActivityParam, selectedActivities)) {
+      dispatch(handleTotalGraphActivitiesControls(totalActivityParam));
+    }
+  }, [dispatch, selectedActivities, totalActivityParam]);
+
+  useEffect(() => {
+    if (totalPeriodParam !== selectedPeriod) {
+      dispatch(handleTotalGraphPeriodControl(totalPeriodParam));
+    }
+  }, [dispatch, selectedPeriod, totalPeriodParam]);
 
   const handlePeriod = useCallback(
     (value: number) => () => {
