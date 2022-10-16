@@ -44,7 +44,8 @@ const AgentGraphConnected: FC = () => {
   const selectedActivities = useAppSelector(
     agentGraphActivitiesControlsSelector
   );
-  const { setUrl } = useStateUrlParams();
+  const { agentActivityParam, agentPeriodParam, assetParam, setUrl } =
+    useStateUrlParams();
   const { from, to } = useTimeframe(selectedPeriod, timeframe);
   const precision = useMemo(
     () => (timeframe === 'daily' ? 'day' : 'hour'),
@@ -53,6 +54,24 @@ const AgentGraphConnected: FC = () => {
   const yType = useAppSelector(agentGraphTypeSelector);
   const { mouseX, mouseY, handleOpenContextMenu, handleCloseContextMenu } =
     useContextMenu();
+
+  useEffect(() => {
+    if (!equals(agentActivityParam, selectedActivities)) {
+      dispatch(handleAgentGraphActivitiesControls(agentActivityParam));
+    }
+  }, [dispatch, selectedActivities, agentActivityParam]);
+
+  useEffect(() => {
+    if (agentPeriodParam !== selectedPeriod) {
+      dispatch(handleAgentGraphPeriodControl(agentPeriodParam));
+    }
+  }, [dispatch, selectedPeriod, agentPeriodParam]);
+
+  useEffect(() => {
+    if (assetParam !== asset) {
+      dispatch(handleAsset(assetParam));
+    }
+  }, [asset, assetParam, dispatch]);
 
   const tvlPeriodsMaxValue = useMemo(
     () => Math.max(...tvlPeriodsUiControls.map((sP) => sP.value)),

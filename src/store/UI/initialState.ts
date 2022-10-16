@@ -1,57 +1,105 @@
-import { allPeriodsUiControls } from 'conf/uiControls';
+import {
+  allPeriodsUiControls,
+  totalGraphActivitiesUiControls,
+  agentGraphUiControls,
+  tablePeriodsUiControls,
+} from 'conf/uiControls';
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 const initialParams = new URLSearchParams(window.location.search);
 
-const getInitialTableSortType = (): combinedTypes => {
-  if (initialParams.has('t_sort')) {
-    const sortType = initialParams.get('t_sort')!;
-    return sortType as combinedTypes;
+export const getInitialTableSortType = (
+  params: URLSearchParams
+): combinedTypes => {
+  if (params.has('t_sort')) {
+    const availableSortTypes = [
+      'usd_balance',
+      'usd_amount_in',
+      'usd_amount_out',
+    ];
+    const sortType = params.get('t_sort')!;
+    if (availableSortTypes.some((type) => type === sortType)) {
+      return sortType as combinedTypes;
+    }
+
+    return 'usd_amount_in';
   }
   return 'usd_amount_in';
 };
 
-const getInitialGraphData = <T>(keyParam: string): T[] => {
-  if (initialParams.has(keyParam)) {
-    return initialParams.get(keyParam)!.split('-') as unknown as T[];
+export const getInitialGraphData = <T>(
+  params: URLSearchParams,
+  conf: IUiSelects<T>[],
+  keyParam: string
+): (keyof T)[] => {
+  if (params.has(keyParam)) {
+    const res = params.get(keyParam)!.split('-') as unknown as (keyof T)[];
+    if (res.every((val) => conf.some((c) => c.value === val))) {
+      return res;
+    }
+
+    return ['usd_amount_in'] as unknown as (keyof T)[];
   }
 
-  return ['usd_amount_in'] as unknown as T[];
+  return ['usd_amount_in'] as unknown as (keyof T)[];
 };
 
-const getInitialAsset = (): string => {
-  if (initialParams.has('asset')) {
-    return initialParams.get('asset') as string;
+export const getInitialAsset = (params: URLSearchParams): string => {
+  if (params.has('asset')) {
+    return params.get('asset') as string;
   }
   return 'all';
 };
 
-const getInitialPeriod = (keyParam: string): number => {
-  if (initialParams.has(keyParam)) {
-    const period = +initialParams.get(keyParam)!;
-    if (allPeriodsUiControls.some((p) => p.value === period)) {
+export const getInitialPeriod = (
+  params: URLSearchParams,
+  conf: IUiControls[],
+  keyParam: string
+): number => {
+  if (params.has(keyParam)) {
+    const period = +params.get(keyParam)!;
+    if (conf.some((p) => p.value === period)) {
       return period;
     }
+
     return keyParam === 't_period' ? 1 : 30;
   }
   return keyParam === 't_period' ? 1 : 30;
 };
 
-const agentsTableSortType = getInitialTableSortType();
+const agentsTableSortType = getInitialTableSortType(initialParams);
 
-const totalGraphActivitiesControls =
-  getInitialGraphData<keyof ITotalWithTvlActivity>('activity');
+const totalGraphActivitiesControls = getInitialGraphData<ITotalWithTvlActivity>(
+  initialParams,
+  totalGraphActivitiesUiControls,
+  'activity'
+);
 
-const agentGraphActivitiesControls =
-  getInitialGraphData<keyof IAddressGraphData>('activity');
+const agentGraphActivitiesControls = getInitialGraphData<IAddressGraphData>(
+  initialParams,
+  agentGraphUiControls,
+  'activity'
+);
 
-const asset = getInitialAsset();
+const asset = getInitialAsset(initialParams);
 
-const totalGraphPeriodControls = getInitialPeriod('g_period');
+const totalGraphPeriodControls = getInitialPeriod(
+  initialParams,
+  allPeriodsUiControls,
+  'g_period'
+);
 
-const agentsTablePeriodControls = getInitialPeriod('t_period');
+const agentsTablePeriodControls = getInitialPeriod(
+  initialParams,
+  tablePeriodsUiControls,
+  't_period'
+);
 
-const agentGraphPeriodControl = getInitialPeriod('g_period');
+const agentGraphPeriodControl = getInitialPeriod(
+  initialParams,
+  allPeriodsUiControls,
+  'g_period'
+);
 
 const mdSmHomeLt = [
   {

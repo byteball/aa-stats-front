@@ -1,7 +1,19 @@
-/* eslint-disable no-unused-vars */
 import { useCallback } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
+
+import {
+  totalGraphActivitiesUiControls,
+  agentGraphUiControls,
+  allPeriodsUiControls,
+  tablePeriodsUiControls,
+} from 'conf/uiControls';
+import {
+  getInitialAsset,
+  getInitialGraphData,
+  getInitialPeriod,
+  getInitialTableSortType,
+} from 'store/UI';
 
 interface UrlParams {
   activity?: (keyof IAddressGraphData)[];
@@ -14,49 +26,105 @@ interface UrlParams {
 type keyType = keyof UrlParams;
 
 interface IUseStateUrlParamsOutput {
+  // eslint-disable-next-line no-unused-vars
   setUrl: (searchParams: UrlParams) => void;
   params: URLSearchParams;
+  // eslint-disable-next-line no-unused-vars
   getParamsString: (searchParams: UrlParams) => string;
+  totalActivityParam: (keyof ITotalWithTvlActivity)[];
+  totalPeriodParam: number;
+  tableSortParam: combinedTypes;
+  tablePeriodParam: number;
+  assetParam: string;
+  agentActivityParam: (keyof IAddressGraphData)[];
+  agentPeriodParam: number;
 }
 
 export const useStateUrlParams = (): IUseStateUrlParamsOutput => {
   const [params, setParams] = useSearchParams();
 
-  const getParamsString = useCallback((searchParams: UrlParams) => {
-    const strArr = Object.keys(searchParams).reduce((res: string[], key) => {
-      const value = searchParams[key as keyType];
-      if (Array.isArray(value)) {
-        res.push(`${key}=${value.join('-')}`);
-      } else {
-        res.push(`${key}=${value}`);
-      }
+  const getUrlSearchParams = useCallback(
+    (
+      searchParamsArr: UrlParams,
+      urlSearchParams = new URLSearchParams()
+    ): URLSearchParams => {
+      Object.keys(searchParamsArr).forEach((key) => {
+        if (urlSearchParams.has(key)) {
+          const value = searchParamsArr[key as keyType];
+          const urlParam = Array.isArray(value)
+            ? String(value.join('-'))
+            : String(value);
+          urlSearchParams.set(key, urlParam);
+        } else {
+          const value = searchParamsArr[key as keyType];
+          const urlParam = Array.isArray(value)
+            ? String(value.join('-'))
+            : String(value);
+          urlSearchParams.append(key, urlParam);
+        }
+      });
+      return urlSearchParams;
+    },
+    []
+  );
 
-      return res;
-    }, []);
-    return strArr.join('&');
-  }, []);
+  const getParamsString = useCallback(
+    (searchParams: UrlParams) => getUrlSearchParams(searchParams).toString(),
+    [getUrlSearchParams]
+  );
 
   const setUrl = useCallback(
     (searchParams: UrlParams) => {
-      Object.keys(searchParams).forEach((key) => {
-        if (params.has(key)) {
-          const value = searchParams[key as keyType];
-          const urlParam = Array.isArray(value)
-            ? String(value.join('-'))
-            : String(value);
-          params.set(key, urlParam);
-        } else {
-          const value = searchParams[key as keyType];
-          const urlParam = Array.isArray(value)
-            ? String(value.join('-'))
-            : String(value);
-          params.append(key, urlParam);
-        }
-      });
-      setParams(params);
+      const urlSearchParams = getUrlSearchParams(searchParams, params);
+      setParams(urlSearchParams);
     },
-    [params, setParams]
+    [getUrlSearchParams, params, setParams]
   );
 
-  return { params, setUrl, getParamsString };
+  const totalActivityParam = getInitialGraphData<ITotalWithTvlActivity>(
+    params,
+    totalGraphActivitiesUiControls,
+    'activity'
+  );
+
+  const totalPeriodParam = getInitialPeriod(
+    params,
+    allPeriodsUiControls,
+    'g_period'
+  );
+
+  const tableSortParam = getInitialTableSortType(params);
+
+  const tablePeriodParam = getInitialPeriod(
+    params,
+    tablePeriodsUiControls,
+    't_period'
+  );
+
+  const assetParam = getInitialAsset(params);
+
+  const agentActivityParam = getInitialGraphData<IAddressGraphData>(
+    params,
+    agentGraphUiControls,
+    'activity'
+  );
+
+  const agentPeriodParam = getInitialPeriod(
+    params,
+    allPeriodsUiControls,
+    'g_period'
+  );
+
+  return {
+    params,
+    setUrl,
+    getParamsString,
+    totalActivityParam,
+    totalPeriodParam,
+    tableSortParam,
+    tablePeriodParam,
+    assetParam,
+    agentActivityParam,
+    agentPeriodParam,
+  };
 };
