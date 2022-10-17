@@ -56,8 +56,9 @@ const TotalGraphConnected: FC = () => {
       selectedActivities.includes('usd_balance') &&
       selectedPeriod > tvlPeriodsMaxValue &&
       selectedPeriod !== 0
-    )
+    ) {
       dispatch(handleTotalGraphPeriodControl(tvlPeriodsMaxValue));
+    }
   }, [dispatch, selectedActivities, selectedPeriod, tvlPeriodsMaxValue]);
 
   useEffect(() => {
@@ -112,7 +113,7 @@ const TotalGraphConnected: FC = () => {
           if (value === 'usd_balance') {
             dispatch(handleTotalGraphActivitiesControls([value]));
             setUrl({ activity: [value] });
-            if (selectedPeriod !== tvlPeriodsMaxValue) {
+            if (selectedPeriod > tvlPeriodsMaxValue || selectedPeriod === 0) {
               dispatch(handleTotalGraphPeriodControl(tvlPeriodsMaxValue));
               setUrl({ g_period: tvlPeriodsMaxValue });
             }
@@ -125,7 +126,7 @@ const TotalGraphConnected: FC = () => {
             ].sort();
             dispatch(handleTotalGraphActivitiesControls(activity));
             setUrl({ activity });
-            if (selectedPeriod < tvlPeriodsMaxValue && selectedPeriod > 0) {
+            if (selectedPeriod < 30 && selectedPeriod > 0) {
               dispatch(handleTotalGraphPeriodControl(tvlPeriodsMaxValue));
               setUrl({ g_period: tvlPeriodsMaxValue });
             }

@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, useCallback, useMemo } from 'react';
 
 import { Box, ButtonBase, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -14,11 +14,18 @@ const Logo: FC<ILogoProps> = ({ title, subtitle }) => {
   const params = useAppSelector(initialHomeSearchParamsSelector);
   const { getParamsString } = useStateUrlParams();
 
+  const paramsString = useMemo(
+    () => getParamsString(params),
+    [getParamsString, params]
+  );
+
+  const goHome = useCallback(() => {
+    nav(`/?${paramsString}`);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [nav, paramsString]);
+
   return (
-    <ButtonBase
-      sx={styles.root}
-      onClick={() => nav(`/?${getParamsString(params)}`)}
-    >
+    <ButtonBase sx={styles.root} onClick={goHome}>
       <Box sx={styles.logo} />
       {title && (
         <Box sx={styles.credits}>
