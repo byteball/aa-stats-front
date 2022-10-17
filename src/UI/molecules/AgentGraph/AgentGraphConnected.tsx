@@ -260,7 +260,7 @@ const AgentGraphConnected: FC = () => {
         timeframe,
         asset,
         color: tvlConf?.color || '',
-        label: tvlConf?.value || '',
+        label: tvlConf?.label || '',
         value: (tvlConf?.value as 'usd_balance' | 'balance') || 'usd_balance',
       },
       { skip: !tvlSelected }
