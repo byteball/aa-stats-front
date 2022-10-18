@@ -9,7 +9,7 @@ const Home: FC = () => (
     <HelmetTitle
       description='Autonomous Agents Statistics'
       ogDescription='Autonomous Agents Statistics'
-      ogTitle='Autonomous Agents Statistics'
+      ogTitle='Obyte'
       title='Obyte | Autonomous Agents Statistics'
     />
     <HomeDashboard />

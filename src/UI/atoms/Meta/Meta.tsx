@@ -19,6 +19,7 @@ const Meta = ({
   ogDescription,
 }: IHelmetProps): JSX.Element => {
   const darkMode = useAppSelector(darkModeSelector);
+
   return (
     <Helmet>
       <title>{title}</title>
