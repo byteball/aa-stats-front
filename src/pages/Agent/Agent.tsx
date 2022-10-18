@@ -19,9 +19,9 @@ const Agent: FC = () => {
   return (
     <>
       <HelmetTitle
-        description={description}
-        ogDescription={description}
-        ogTitle={`Obyte | ${description}`}
+        description='Agent Statistics'
+        ogDescription='Agent Statistics'
+        ogTitle={description}
         title={`Obyte | ${description}`}
       />
       <AgentDashboard />
