@@ -1,7 +1,7 @@
 import { Serie } from '@nivo/line';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { apiKey } from 'conf/constants';
+import { apiUrl } from 'conf/constants';
 
 import {
   transformStatsForOneAddress,
@@ -19,7 +19,7 @@ import {
 export const aastatsAPI = createApi({
   reducerPath: 'aastatsAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: apiKey,
+    baseUrl: apiUrl,
   }),
   tagTypes: [
     'Address',
