@@ -71,7 +71,8 @@ const AgentGraphConnected: FC = () => {
     if (assetParam !== asset) {
       dispatch(handleAsset(assetParam));
     }
-  }, [asset, assetParam, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assetParam, dispatch]);
 
   const tvlPeriodsMaxValue = useMemo(
     () => Math.max(...tvlPeriodsUiControls.map((sP) => sP.value)),
@@ -290,6 +291,7 @@ const AgentGraphConnected: FC = () => {
       }
       if (!assets.some((a) => a.assetSymbol === asset) && asset !== 'all') {
         dispatch(handleAsset('all'));
+        setUrl({ asset: 'all' });
       }
     } else if (data) {
       const assets = [
@@ -316,6 +318,7 @@ const AgentGraphConnected: FC = () => {
       }
       if (!assets.some((a) => a.assetSymbol === asset) && asset !== 'all') {
         dispatch(handleAsset('all'));
+        setUrl({ asset: 'all' });
       }
     }
   }, [asset, data, dispatch, selectedAssets, tvlData, tvlSelected]);
