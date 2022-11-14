@@ -68,11 +68,13 @@ const AgentGraphConnected: FC = () => {
   }, [dispatch, selectedPeriod, agentPeriodParam]);
 
   useEffect(() => {
+    console.log('here');
     if (assetParam !== asset) {
+      console.log('here2');
       dispatch(handleAsset(assetParam));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetParam, dispatch]);
+  }, []);
 
   const tvlPeriodsMaxValue = useMemo(
     () => Math.max(...tvlPeriodsUiControls.map((sP) => sP.value)),
@@ -321,7 +323,7 @@ const AgentGraphConnected: FC = () => {
         setUrl({ asset: 'all' });
       }
     }
-  }, [asset, data, dispatch, selectedAssets, tvlData, tvlSelected]);
+  }, [asset, data, dispatch, selectedAssets, setUrl, tvlData, tvlSelected]);
 
   useEffect(() => {
     if (asset === 'all' && selectedActivities[0] === 'balance') {
