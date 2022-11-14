@@ -68,9 +68,7 @@ const AgentGraphConnected: FC = () => {
   }, [dispatch, selectedPeriod, agentPeriodParam]);
 
   useEffect(() => {
-    console.log('here');
     if (assetParam !== asset) {
-      console.log('here2');
       dispatch(handleAsset(assetParam));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
