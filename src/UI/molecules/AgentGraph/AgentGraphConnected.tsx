@@ -55,37 +55,10 @@ const AgentGraphConnected: FC = () => {
   const { mouseX, mouseY, handleOpenContextMenu, handleCloseContextMenu } =
     useContextMenu();
 
-  useEffect(() => {
-    if (!equals(agentActivityParam, selectedActivities)) {
-      dispatch(handleAgentGraphActivitiesControls(agentActivityParam));
-    }
-  }, [dispatch, selectedActivities, agentActivityParam]);
-
-  useEffect(() => {
-    if (agentPeriodParam !== selectedPeriod) {
-      dispatch(handleAgentGraphPeriodControl(agentPeriodParam));
-    }
-  }, [dispatch, selectedPeriod, agentPeriodParam]);
-
-  useEffect(() => {
-    if (assetParam !== asset) {
-      dispatch(handleAsset(assetParam));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const tvlPeriodsMaxValue = useMemo(
     () => Math.max(...tvlPeriodsUiControls.map((sP) => sP.value)),
     []
   );
-
-  useEffect(() => {
-    if (
-      selectedActivities.includes('usd_balance' || 'balance') &&
-      selectedPeriod > tvlPeriodsMaxValue
-    )
-      dispatch(handleAgentGraphPeriodControl(tvlPeriodsMaxValue));
-  }, [dispatch, selectedActivities, selectedPeriod, tvlPeriodsMaxValue]);
 
   const handlePeriod = useCallback(
     (value: number) => () => {
@@ -319,21 +292,49 @@ const AgentGraphConnected: FC = () => {
       if (!assets.some((a) => a.assetSymbol === asset) && asset !== 'all') {
         dispatch(handleAsset('all'));
         setUrl({ asset: 'all' });
+        return;
+      }
+      if (assetParam !== asset) {
+        dispatch(handleAsset(assetParam));
       }
     }
-  }, [asset, data, dispatch, selectedAssets, setUrl, tvlData, tvlSelected]);
+  }, [
+    agentPeriodParam,
+    asset,
+    assetParam,
+    data,
+    dispatch,
+    selectedAssets,
+    selectedPeriod,
+    setUrl,
+    tvlData,
+    tvlSelected,
+  ]);
 
   useEffect(() => {
     if (asset === 'all' && selectedActivities[0] === 'balance') {
-      dispatch(
-        handleAgentGraphActivitiesControls(
-          selectButtonConf
-            .filter((sbc) => sbc.value === 'usd_balance')
-            .map((sbc) => sbc.value)
-        )
-      );
+      dispatch(handleAgentGraphActivitiesControls(['usd_balance']));
+      setUrl({ activity: ['usd_balance'] });
+      return;
     }
-  }, [asset, dispatch, selectButtonConf, selectedActivities]);
+    if (!equals(agentActivityParam, selectedActivities)) {
+      dispatch(handleAgentGraphActivitiesControls(agentActivityParam));
+    }
+  }, [dispatch, selectedActivities, agentActivityParam, asset, setUrl]);
+
+  useEffect(() => {
+    if (agentPeriodParam !== selectedPeriod) {
+      dispatch(handleAgentGraphPeriodControl(agentPeriodParam));
+    }
+  }, [agentPeriodParam, dispatch, selectedPeriod]);
+
+  useEffect(() => {
+    if (
+      selectedActivities.includes('usd_balance' || 'balance') &&
+      selectedPeriod > tvlPeriodsMaxValue
+    )
+      dispatch(handleAgentGraphPeriodControl(tvlPeriodsMaxValue));
+  }, [dispatch, selectedActivities, selectedPeriod, tvlPeriodsMaxValue]);
 
   return (
     <AgentGraph
