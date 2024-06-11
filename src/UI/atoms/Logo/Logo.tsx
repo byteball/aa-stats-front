@@ -26,6 +26,7 @@ const Logo: FC<ILogoProps> = ({ title, subtitle }) => {
   }, [nav, paramsString]);
 
   const typeOfWrapComponent = pathname === '/' ? 'h1' : 'div';
+  const typeOfSubtitleComponent = pathname === '/' ? 'p' : 'h2';
 
   return (
     <ButtonBase sx={styles.root} onClick={goHome}>
@@ -35,7 +36,12 @@ const Logo: FC<ILogoProps> = ({ title, subtitle }) => {
           <Typography component={typeOfWrapComponent} sx={styles.title}>
             <span>{title}</span>
             {subtitle && (
-              <Typography sx={styles.subtitle}>{subtitle}</Typography>
+              <Typography
+                component={typeOfSubtitleComponent}
+                sx={styles.subtitle}
+              >
+                {subtitle}
+              </Typography>
             )}
           </Typography>
         </Box>
