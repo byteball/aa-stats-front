@@ -11,7 +11,7 @@ const Footer: FC = () => (
     <SocialBlock />
     <Box>
       <Typography sx={styles.copyright}>
-        © 2022{' '}
+        © 2024{' '}
         <Link href='https://obyte.org/' sx={styles.link} target='_blank'>
           Obyte.
         </Link>{' '}
