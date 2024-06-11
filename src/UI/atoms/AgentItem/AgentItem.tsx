@@ -2,7 +2,7 @@
 import { FC, memo, useEffect, useMemo, useState } from 'react';
 
 import { Box, Divider, Fade, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { usd } from 'lib/currency';
 import { useMedia } from 'lib/useMedia';
@@ -39,7 +39,9 @@ const AgentItem: FC<IAgentItemProps> = ({
     <>
       <Fade in={show}>
         <Box
+          component={Link}
           sx={isSelected ? styles.selected : styles.root}
+          to={`/address/${address}`}
           onClick={onNavigate(address)}
         >
           <Box sx={styles.agent}>
