@@ -36,8 +36,9 @@ export const styles: Record<string, SxProps> = {
     height: '42px',
   },
   table: {
-    '&>div': {
+    '&>a': {
       display: 'flex',
+      textDecoration: 'none',
       justifyContent: 'space-between',
       height: '42px',
       px: '10px',

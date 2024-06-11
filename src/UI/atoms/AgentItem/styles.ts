@@ -3,6 +3,7 @@ import { SxProps } from '@mui/material';
 export const styles: Record<string, SxProps> = {
   root: {
     cursor: 'pointer',
+    color: 'primary.main',
   },
   agent: {
     width: '260px',

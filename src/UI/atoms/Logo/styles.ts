@@ -28,6 +28,7 @@ export const styles: Record<string, SxProps> = {
   title: {
     fontSize: '18px',
     fontWeight: 700,
+    textAlign: 'start',
   },
   subtitle: {
     fontSize: { xs: '12px', sm: '14px' },
