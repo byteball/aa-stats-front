@@ -4,6 +4,10 @@
 
 import { Client } from 'obyte';
 
+import { botCheck } from 'lib/botCheck';
+import ObyteHttpService from 'store/Obyte/Obyte.http.service';
+
+const isBot = botCheck();
 interface IGetTemplateParamsArgs {
   /** Definition's params of base_aa */
   params: any;
@@ -42,9 +46,17 @@ export const templates: ITemplate[] = [
       `Stability Fund for Bonded Stablecoin ${asset2}`,
     getTemplateParams: async ({ params, client }) => {
       const { curve_aa = '' } = params;
-      const stateVars = await client.api.getAaStateVars({
-        address: curve_aa,
-      });
+
+      let stateVars;
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(curve_aa, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({
+          address: curve_aa,
+        });
+      }
+
       const { asset2 = '' } = stateVars as { asset2: string };
       return { asset2 };
     },
@@ -67,7 +79,16 @@ export const templates: ITemplate[] = [
     ],
     getTemplate: ({ asset2 }) => `Bonded Stablecoin v2 ${asset2}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars;
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({
+          address,
+        });
+      }
+
       const { asset2 = '' } = stateVars as { asset2: string };
       return { asset2 };
     },
@@ -80,7 +101,15 @@ export const templates: ITemplate[] = [
     ],
     getTemplate: ({ asset2 }) => `Bonded Stablecoin v1 ${asset2}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars;
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({
+          address,
+        });
+      }
       const { asset2 = '' } = stateVars as { asset2: string };
       return { asset2 };
     },
@@ -90,7 +119,16 @@ export const templates: ITemplate[] = [
     baseAAs: ['YXPLX6Q3HBBSH2K5HLYM45W7P7HFSEIN'],
     getTemplate: ({ asset }) => `Bonded Stablecoin v2 stable AA for ${asset}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars;
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({
+          address,
+        });
+      }
+
       const { asset = '' } = stateVars as { asset: string };
       return { asset };
     },
@@ -105,12 +143,23 @@ export const templates: ITemplate[] = [
       `Arbitrage AA for buying/selling ${asset1} for ${reserve_asset} when the price deviates from the peg.`,
     getTemplateParams: async ({ params, client }) => {
       const { curve_aa = '' } = params;
-      const [stateVars, curveDef] = await Promise.all([
-        client.api.getAaStateVars({
-          address: curve_aa,
-        }),
-        client.api.getDefinition(curve_aa),
-      ]);
+
+      let [stateVars, curveDef]: [object, any[]] = [{}, []];
+
+      if (isBot) {
+        [stateVars, curveDef] = await Promise.all([
+          ObyteHttpService.getAaStateVars(curve_aa, undefined),
+          ObyteHttpService.getDefinition(curve_aa),
+        ]);
+      } else {
+        [stateVars, curveDef] = await Promise.all([
+          client.api.getAaStateVars({
+            address: curve_aa,
+          }),
+          client.api.getDefinition(curve_aa),
+        ]);
+      }
+
       const { asset1 = '' } = stateVars as { asset1: string };
       const { reserve_asset = '' } = curveDef.at(1).params;
       return { asset1, reserve_asset };
@@ -123,10 +172,20 @@ export const templates: ITemplate[] = [
       `Bonded Stablecoin Deposits for ${asset}/${asset2}`,
     getTemplateParams: async ({ params, client, address }) => {
       const { curve_aa } = params;
-      const [stateVars, stateVarsCurveAA] = await Promise.all([
-        client.api.getAaStateVars({ address }),
-        client.api.getAaStateVars({ address: curve_aa }),
-      ]);
+      let [stateVars, stateVarsCurveAA] = [{}, {}];
+
+      if (isBot) {
+        [stateVars, stateVarsCurveAA] = await Promise.all([
+          ObyteHttpService.getAaStateVars(address, undefined),
+          ObyteHttpService.getAaStateVars(curve_aa, undefined),
+        ]);
+      } else {
+        [stateVars, stateVarsCurveAA] = await Promise.all([
+          client.api.getAaStateVars({ address }),
+          client.api.getAaStateVars({ address: curve_aa }),
+        ]);
+      }
+
       const { asset = '' } = stateVars as { asset: string };
       const { asset2 = '' } = stateVarsCurveAA as { asset2: string };
       return { asset, asset2 };
@@ -138,7 +197,14 @@ export const templates: ITemplate[] = [
     getTemplate: ({ shares_asset }) =>
       `Counterstake Bridge Export Pooled Assistant ${shares_asset}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address });
+      }
+
       const { shares_asset = '' } = stateVars as { shares_asset: string };
       return { shares_asset };
     },
@@ -164,7 +230,14 @@ export const templates: ITemplate[] = [
     getTemplate: ({ shares_asset }) =>
       `Counterstake Bridge Import Pooled Assistant ${shares_asset}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address });
+      }
+
       const { shares_asset = '' } = stateVars as { shares_asset: string };
       return { shares_asset };
     },
@@ -180,9 +253,15 @@ export const templates: ITemplate[] = [
     getTemplate: ({ asset2 }) => `Bonded Stablecoin Governance for ${asset2}`,
     getTemplateParams: async ({ params, client }) => {
       const { curve_aa = '' } = params;
-      const stateVars = await client.api.getAaStateVars({
-        address: curve_aa,
-      });
+
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(curve_aa, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address: curve_aa });
+      }
+
       const { asset2 = '' } = stateVars as { asset2: string };
       return { asset2 };
     },
@@ -192,7 +271,14 @@ export const templates: ITemplate[] = [
     baseAAs: ['JLLM2AUTHYUS5EW36YVSPDYIDDQRABU6'],
     getTemplate: ({ asset }) => `Discount Stablecoin ${asset}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address });
+      }
+
       const { asset = '' } = stateVars as { asset: string };
       return { asset };
     },
@@ -205,7 +291,14 @@ export const templates: ITemplate[] = [
     ],
     getTemplate: ({ yes_asset }) => `Prophet prediction market ${yes_asset}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address });
+      }
+
       const { yes_asset = '' } = stateVars as { yes_asset: string };
       return { yes_asset };
     },
@@ -217,9 +310,15 @@ export const templates: ITemplate[] = [
       `Counterstake Bridge Import Governance AA for ${asset}`,
     getTemplateParams: async ({ params, client }) => {
       const { import_aa = '' } = params;
-      const stateVars = await client.api.getAaStateVars({
-        address: import_aa,
-      });
+
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(import_aa, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address: import_aa });
+      }
+
       const { asset = '' } = stateVars as { asset: string };
       return { asset };
     },
@@ -235,9 +334,14 @@ export const templates: ITemplate[] = [
       `Bonded Stablecoin Decision Engine AA for ${asset2}`,
     getTemplateParams: async ({ params, client }) => {
       const { curve_aa = '' } = params;
-      const stateVars = await client.api.getAaStateVars({
-        address: curve_aa,
-      });
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(curve_aa, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address: curve_aa });
+      }
+
       const { asset2 = '' } = stateVars as { asset2: string };
       return { asset2 };
     },
@@ -250,7 +354,14 @@ export const templates: ITemplate[] = [
     ],
     getTemplate: ({ asset }) => `Counterstake Bridge Import ${asset}`,
     getTemplateParams: async ({ client, address }) => {
-      const stateVars = await client.api.getAaStateVars({ address });
+      let stateVars = {};
+
+      if (isBot) {
+        stateVars = await ObyteHttpService.getAaStateVars(address, undefined);
+      } else {
+        stateVars = await client.api.getAaStateVars({ address });
+      }
+
       const { asset = '' } = stateVars as { asset: string };
       return { asset };
     },
