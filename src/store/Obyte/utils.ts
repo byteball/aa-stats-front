@@ -4,12 +4,17 @@ import { isEmpty } from 'ramda';
 
 import { templates } from 'conf/templates';
 import { apiGet, apiOriginGet } from 'lib/api';
+import { botCheck } from 'lib/botCheck';
+
+import ObyteHttpService from './Obyte.http.service';
 
 /** templated base agents */
 const templatedBaseAAs = templates.reduce(
   (baseAAs: string[], template) => baseAAs.concat(template.baseAAs),
   []
 );
+
+const isBot = botCheck();
 
 /**
  * Get Definition of Agent
@@ -36,9 +41,22 @@ export const getDocUrl = async (
   client: Client
 ): Promise<string> => {
   try {
-    const res = await client.api.getDefinition(address);
+    let res;
+    if (isBot) {
+      res = await ObyteHttpService.getDefinition(address);
+    } else {
+      res = await client.api.getDefinition(address);
+    }
+
     if ('base_aa' in res[1]) {
-      const def = await client.api.getDefinition(res[1].base_aa);
+      let def;
+
+      if (isBot) {
+        def = await ObyteHttpService.getDefinition(res[1].base_aa);
+      } else {
+        def = await client.api.getDefinition(res[1].base_aa);
+      }
+
       return def[1].doc_url;
     }
     if ('doc_url' in res[1]) return res[1].doc_url;
@@ -85,7 +103,14 @@ export const getAddressesBaseAA = async (
 ): Promise<IAddressWithBaseAA[]> =>
   Promise.all(
     addresses.map(async (address) => {
-      const definition = await client.api.getDefinition(address);
+      let definition;
+
+      if (isBot) {
+        definition = await ObyteHttpService.getDefinition(address);
+      } else {
+        definition = await client.api.getDefinition(address);
+      }
+
       if (Object.hasOwn(definition[1], 'base_aa')) {
         return { address, base_aa: definition[1].base_aa as string };
       }
@@ -126,7 +151,14 @@ const getAssetsInfoForTemplatedAgentsFabric = async (
   client: Client
 ): Promise<Record<string, string> | undefined> => {
   try {
-    const definition = await client.api.getDefinition(address);
+    let definition;
+
+    if (isBot) {
+      definition = await ObyteHttpService.getDefinition(address);
+    } else {
+      definition = await client.api.getDefinition(address);
+    }
+
     if (
       Object.hasOwn(definition[1], 'base_aa') &&
       Object.hasOwn(definition[1], 'params')
