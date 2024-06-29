@@ -1,6 +1,6 @@
 # Autonomous agent (AA) statistics website
 
-Displays statistical data about total value locked (TVL) and turnovers on AAs deployed on Obyte.
+Displays statistical data about total value locked (TVL) and turnovers on [AAs](https://obyte.org/platform/autonomous-agents) deployed on Obyte, and provides links to their dApps.
 
 ## scripts
 
