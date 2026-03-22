@@ -30,6 +30,7 @@ export const templates: ITemplate[] = [
   // Obyte exchange protocol v2
   {
     baseAAs: [
+      'V3U7V4HPGG2RILPLD3UUJDJS66CYICJJ', // Mar 2026
       'DYZOJKX4MJOQRAUPX7K6WCEV5STMKOHI',
       '2JYYNOSRFGLI3TBI4FVSE6GFBUAZTTI3',
     ],
